@@ -1,0 +1,1039 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Série Válida</title>
+<meta name="description" content="App de treino: planilha do treinador vira sessões no celular, registre carga e reps, timer de descanso.">
+<meta name="theme-color" content="#5B3FD1">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: single phone column, sticky view header, fixed bottom tab bar; lilac = "campo de preenchimento" like the coach's sheet */
+:root{
+  --bg:#F3F2F7; --surface:#FFFFFF; --ink:#1A1924; --muted:#666477; --line:#E0DEEA;
+  --accent:#5B3FD1; --accent-ink:#FFFFFF; --fill:#ECE6FC; --fill-line:#CFC3F6;
+  --good:#17805A; --good-bg:#E2F4EC; --warn:#9A6212; --warn-bg:#FBF0DC; --bad:#B4322E;
+  --shadow:0 1px 2px rgba(26,25,36,.06),0 4px 14px rgba(26,25,36,.05);
+  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111017; --surface:#1B1A23; --ink:#EEEDF5; --muted:#A09EB2; --line:#2D2B39;
+  --accent:#A694FF; --accent-ink:#15112A; --fill:#262040; --fill-line:#41376B;
+  --good:#5CCB9C; --good-bg:#143327; --warn:#E6B15C; --warn-bg:#352812; --bad:#F07C76;
+  --shadow:none; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111017; --surface:#1B1A23; --ink:#EEEDF5; --muted:#A09EB2; --line:#2D2B39;
+  --accent:#A694FF; --accent-ink:#15112A; --fill:#262040; --fill-line:#41376B;
+  --good:#5CCB9C; --good-bg:#143327; --warn:#E6B15C; --warn-bg:#352812; --bad:#F07C76;
+  --shadow:none; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg);margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+body{color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45;-webkit-text-size-adjust:100%;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 calc(84px + env(safe-area-inset-bottom,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:560px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;letter-spacing:.01em;margin:0;text-wrap:balance;line-height:1.1}
+h1{font-size:2rem}
+h2{font-size:1.45rem}
+h3{font-size:1.15rem}
+p{margin:0}
+a{color:var(--accent)}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+.label{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.spread{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.spread>*{min-width:0}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:14px 0 10px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.top .eyebrow{display:block;margin-bottom:2px}
+main{display:flex;flex-direction:column;gap:16px;padding-bottom:8px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
+.card.flat{box-shadow:none}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:10px 16px;font-weight:600;min-height:44px;text-decoration:none;color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.block{width:100%}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--accent);padding-inline:8px}
+.btn.danger{color:var(--bad)}
+.btn.sm{min-height:36px;padding:6px 12px;font-size:.9rem}
+.btn:disabled{opacity:.5}
+.icon-btn{border:0;background:transparent;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:var(--ink)}
+
+.badge{font-family:var(--f-display);font-weight:700;display:inline-grid;place-items:center;min-width:34px;height:34px;padding:0 6px;border-radius:9px;background:var(--ink);color:var(--bg);font-size:1.2rem;flex:none}
+.badge.lg{min-width:56px;height:56px;font-size:2rem;border-radius:14px}
+.badge.soft{background:var(--fill);color:var(--accent)}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:.8rem;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.pill.good{background:var(--good-bg);color:var(--good);border-color:transparent}
+.pill.warn{background:var(--warn-bg);color:var(--warn);border-color:transparent}
+.pill.accent{background:var(--fill);color:var(--accent);border-color:transparent}
+
+/* week strip */
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;border-radius:12px;border:1px solid transparent;font-size:.75rem;color:var(--muted);background:transparent}
+.day b{font-family:var(--f-display);font-size:1.25rem;color:var(--ink);line-height:1;height:1.25rem}
+.day.today{border-color:var(--accent);background:var(--surface)}
+.day.done b{color:var(--good)}
+.day .dot{width:6px;height:6px;border-radius:50%;background:transparent}
+.day.done .dot{background:var(--good)}
+
+.hero{display:flex;gap:14px;align-items:center}
+.hero h2{font-size:1.7rem}
+
+.choices{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.choice{display:flex;gap:10px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px;min-height:56px}
+.choice span{min-width:0}
+.choice small{display:block;color:var(--muted);font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* exercise card (runner) */
+.ex{display:flex;flex-direction:column;gap:10px}
+.ex-head{display:flex;gap:10px;align-items:flex-start}
+.ex-head h3{font-size:1.2rem}
+.ex-meta{display:flex;flex-wrap:wrap;gap:6px}
+.ex-notes{font-size:.95rem;color:var(--ink);background:var(--bg);border-radius:10px;padding:10px 12px}
+.ex-notes.method{background:var(--fill);}
+.hint{font-size:.9rem;border-radius:10px;padding:8px 12px}
+.hint.up{background:var(--good-bg);color:var(--good);font-weight:600}
+.sets{display:flex;flex-direction:column;gap:6px}
+.set{display:grid;grid-template-columns:minmax(0,1fr) 92px 74px;gap:8px;align-items:center}
+.set .lbl{display:flex;flex-direction:column;line-height:1.15}
+.set .lbl b{font-weight:600}
+.set .lbl small{color:var(--muted);font-size:.8rem}
+.field{position:relative}
+.field input{width:100%;height:46px;border-radius:10px;border:1px solid var(--fill-line);background:var(--fill);padding:0 30px 0 10px;font-size:1.1rem;font-weight:600;font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
+.field input::placeholder{color:var(--muted);font-weight:500;opacity:.75}
+.field span{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:.75rem;color:var(--muted);pointer-events:none}
+.set-head{display:grid;grid-template-columns:minmax(0,1fr) 92px 74px;gap:8px}
+.set-head span{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.warmups{display:flex;gap:6px;flex-wrap:wrap}
+.chk{display:inline-flex;align-items:center;gap:6px;border:1px dashed var(--line);border-radius:999px;padding:6px 12px;font-size:.85rem;background:transparent;color:var(--muted);min-height:36px}
+.chk[aria-pressed="true"]{border-style:solid;border-color:var(--good);color:var(--good);background:var(--good-bg)}
+
+textarea,.input,select{width:100%;border:1px solid var(--fill-line);background:var(--fill);border-radius:10px;padding:10px 12px;font-size:1rem}
+textarea{min-height:96px;resize:vertical}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted);font-weight:600}
+label.f>*{color:var(--ink);font-weight:400}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.grid2>*,.grid3>*{min-width:0}
+
+/* tab bar */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);
+  padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.tab{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;font-size:.75rem;font-weight:600;color:var(--muted);min-height:48px}
+.tab svg{width:24px;height:24px}
+.tab[aria-current="page"]{color:var(--accent)}
+
+/* timer */
+.timer{position:fixed;left:0;right:0;bottom:calc(70px + env(safe-area-inset-bottom,0px));z-index:19;padding:0 max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px))}
+.timer .in{max-width:560px;margin:0 auto;background:var(--ink);color:var(--bg);border-radius:16px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.timer .t{font-family:var(--f-display);font-size:2rem;font-weight:700;min-width:84px;font-variant-numeric:tabular-nums}
+.timer .in{flex-wrap:wrap;row-gap:6px}
+.timer .lab{order:-1;flex-basis:100%;min-width:0;font-size:.85rem;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.timer .t{flex:1}
+.timer button{border:0;background:rgba(127,127,127,.25);color:inherit;border-radius:10px;height:38px;min-width:44px;font-weight:700}
+.timer.over .in{background:var(--good);color:#fff}
+.bar{height:4px;border-radius:2px;background:rgba(127,127,127,.3);overflow:hidden}
+.bar i{display:block;height:100%;background:currentColor}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;margin:0 -4px}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{padding:7px 6px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left;white-space:normal;min-width:140px}
+th{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+td.up{color:var(--good);font-weight:600}
+
+.list{display:flex;flex-direction:column}
+.li{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);text-align:left;background:transparent;border-left:0;border-right:0;border-top:0;width:100%}
+.li:last-child{border-bottom:0}
+.li .grow{flex:1;min-width:0}
+.li .grow p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:6px 14px;font-weight:600;color:var(--muted);min-height:36px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+
+details{border-top:1px solid var(--line);padding-top:10px}
+details summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between}
+details summary::after{content:"+";color:var(--muted)}
+details[open] summary::after{content:"–"}
+details>div{padding-top:8px}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px}
+dt{font-weight:600}
+dd{margin:0;color:var(--muted)}
+
+.empty{text-align:center;padding:32px 16px;display:flex;flex-direction:column;gap:14px;align-items:center}
+.drop{border:2px dashed var(--fill-line);background:var(--fill);border-radius:var(--r);padding:24px 16px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center}
+.toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(12px + env(safe-area-inset-top,0px));z-index:30;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;max-width:calc(100% - 32px);box-shadow:0 6px 24px rgba(0,0,0,.2)}
+.confirm{background:var(--warn-bg);color:var(--warn);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.edit-ex{border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.edit-ex .tools{display:flex;gap:4px;margin-left:auto}
+.days{display:flex;gap:4px;flex-wrap:wrap}
+.days button{width:40px;height:36px;border-radius:9px;border:1px solid var(--line);background:var(--surface);font-weight:600;font-size:.85rem}
+.days button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+@media (max-width:440px){.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:380px){.set,.set-head{grid-template-columns:minmax(0,1fr) 84px 66px}}
+@media (prefers-reduced-motion:no-preference){.btn,.chk,.tab{transition:background-color .15s,color .15s}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app" aria-live="polite">
+  <div class="top"><div><span class="label eyebrow">Série Válida</span><h1>Carregando…</h1></div></div>
+</div>
+<div id="timer" hidden></div>
+<nav class="tabs" id="tabs" aria-label="Seções"></nav>
+<input type="file" id="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+<input type="file" id="backupFile" accept=".json,application/json" hidden>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</body>
+</html>
+<script>
+/* ============================================================
+   Série Válida — app de treino local-first
+   Dados: IndexedDB no aparelho (+ banco da conta quando aberto no claude.ai)
+   Entrada/saída: a própria planilha .xlsx do treinador
+   ============================================================ */
+(function(){
+"use strict";
+const APP_VERSION = "0.1.0";
+const NS_MAIN = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+const NS_R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+const NS_PKG = "http://schemas.openxmlformats.org/package/2006/relationships";
+const NS_XML = "http://www.w3.org/XML/1998/namespace";
+const LOG_SHEET = "Registro do app";
+const DOW_SHORT = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+const DOW_LONG = ["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
+
+/* ---------- utils ---------- */
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm = s => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/\s+/g," ").trim();
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const pad = n => String(n).padStart(2,"0");
+const ymd = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parseYmd = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const todayStr = () => ymd(new Date());
+const fmtDate = s => { const d = parseYmd(s); return DOW_SHORT[d.getDay()].toLowerCase()+" "+pad(d.getDate())+"/"+pad(d.getMonth()+1); };
+const mondayOf = d => { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); const k = (x.getDay()+6)%7; x.setDate(x.getDate()-k); return x; };
+const numParse = v => { if (v === "" || v == null) return null; const n = Number(String(v).replace(",", ".").trim()); return Number.isFinite(n) ? n : null; };
+const fmtKg = n => n == null ? "" : (Math.round(n*100)/100).toString().replace(".", ",");
+const dash = v => (v === "" || v == null || v === "-") ? "–" : String(v);
+function toast(msg){ const t = document.createElement("div"); t.className="toast"; t.setAttribute("role","status"); t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2600); }
+const bufToB64 = buf => { const b = new Uint8Array(buf); let s = ""; for (let i=0;i<b.length;i+=0x8000) s += String.fromCharCode.apply(null, b.subarray(i,i+0x8000)); return btoa(s); };
+const b64ToBuf = b64 => { const s = atob(b64); const b = new Uint8Array(s.length); for (let i=0;i<s.length;i++) b[i]=s.charCodeAt(i); return b.buffer; };
+async function cap(name){ try { return (window.claude && typeof window.claude.use === "function") ? await window.claude.use(name) : null; } catch(e){ return null; } }
+
+/* ---------- storage: IndexedDB (+ localStorage fallback) ---------- */
+const local = (() => {
+  let dbp = null;
+  function open(){ if (dbp) return dbp; dbp = new Promise((res, rej) => { try { const r = indexedDB.open("serie-valida", 1); r.onupgradeneeded = () => r.result.createObjectStore("kv"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); } catch(e){ rej(e); } }); return dbp; }
+  async function get(k){ try { const db = await open(); return await new Promise((res, rej) => { const q = db.transaction("kv").objectStore("kv").get(k); q.onsuccess = () => res(q.result ?? null); q.onerror = () => rej(q.error); }); } catch(e){ try { const v = localStorage.getItem("sv:"+k); return v ? JSON.parse(v) : null; } catch(_) { return null; } } }
+  async function set(k, v){ try { const db = await open(); await new Promise((res, rej) => { const tx = db.transaction("kv","readwrite"); tx.objectStore("kv").put(v, k); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); } catch(e){ try { localStorage.setItem("sv:"+k, JSON.stringify(v)); } catch(_){} } }
+  return { get, set };
+})();
+
+/* remote (claude.ai account) — optional */
+const remote = { coll: null, ready: false };
+async function initRemote(){
+  const db = await cap("db"); if (!db) return false;
+  const user = await cap("user"); const id = user ? await user.id().catch(()=>null) : null; if (!id) return false;
+  remote.coll = db.collection("data/users/" + id); remote.ready = true; return true;
+}
+
+/* ---------- state ---------- */
+let S = null;          // persisted state
+let TEMPLATE = null;   // base64 of the coach's original .xlsx
+const UI = { tab: "hoje", view: null, histMode: "sessoes", editKey: null, confirm: null, pendingFile: null, lastDoneId: null };
+const dirtyLogs = new Set(), deletedLogs = new Set();
+let saveTimer = null;
+
+function blankState(){ return { v:1, updatedAt:0, program:null, logs:[], draft:null, cycleStart:null, rotPos:0, coachMode:false }; }
+function persist(logId){
+  S.updatedAt = Date.now();
+  if (logId) dirtyLogs.add(logId);
+  clearTimeout(saveTimer); saveTimer = setTimeout(flush, 400);
+}
+async function flush(){
+  await local.set("state", S);
+  if (!remote.ready) return;
+  try {
+    const meta = Object.assign({}, S, { logs: undefined });
+    await remote.coll.doc("state").set({ json: JSON.stringify(meta), updatedAt: S.updatedAt });
+    for (const id of [...dirtyLogs]) { const l = S.logs.find(x=>x.id===id); dirtyLogs.delete(id); if (l) await remote.coll.doc("log_"+id).set({ json: JSON.stringify(l), updatedAt: l.updatedAt||S.updatedAt }); }
+    for (const id of [...deletedLogs]) { deletedLogs.delete(id); await remote.coll.doc("log_"+id).delete().catch(()=>{}); }
+  } catch(e){ console.warn("remote save failed", e); }
+}
+async function saveTemplate(b64){
+  TEMPLATE = b64; await local.set("template", b64);
+  if (remote.ready) { try { await remote.coll.doc("template").set({ b64 }); } catch(e){ console.warn("template remote save failed (size?)", e); } }
+}
+async function pullRemote(){
+  try {
+    const snap = await remote.coll.get();
+    let meta = null, tpl = null; const logs = [];
+    snap.docs.forEach(d => { const id = d.id, data = d.data() || {}; if (id === "state") meta = data; else if (id === "template") tpl = data.b64; else if (id.startsWith("log_")) { try { logs.push(JSON.parse(data.json)); } catch(_){} } });
+    if (!meta) { // nothing remote yet: push what we have
+      if (S.program) { S.logs.forEach(l => dirtyLogs.add(l.id)); await flush(); if (TEMPLATE) await saveTemplate(TEMPLATE); }
+      return false;
+    }
+    const m = JSON.parse(meta.json);
+    const byId = new Map(S.logs.map(l => [l.id, l]));
+    logs.forEach(l => { const mine = byId.get(l.id); if (!mine || (l.updatedAt||0) > (mine.updatedAt||0)) byId.set(l.id, l); });
+    if ((meta.updatedAt||0) > (S.updatedAt||0)) { S = Object.assign(blankState(), m, { logs: [...byId.values()] }); }
+    else { S.logs = [...byId.values()]; }
+    if (tpl && !TEMPLATE) { TEMPLATE = tpl; await local.set("template", tpl); }
+    await local.set("state", S);
+    return true;
+  } catch(e){ console.warn("remote load failed", e); return false; }
+}
+
+/* ============================================================
+   XLSX reading (JSZip + DOMParser)
+   ============================================================ */
+const colNum = c => { let n=0; for (const ch of c) n = n*26 + (ch.charCodeAt(0)-64); return n; };
+const colStr = n => { let s=""; while(n>0){ const m=(n-1)%26; s=String.fromCharCode(65+m)+s; n=Math.floor((n-1)/26);} return s; };
+const splitRef = r => { const m = /^([A-Z]+)(\d+)$/.exec(r); return m ? { col:m[1], row:+m[2] } : null; };
+const parseXml = s => new DOMParser().parseFromString(s, "application/xml");
+
+async function openBook(buf){
+  const zip = await JSZip.loadAsync(buf);
+  const xml = async p => { const f = zip.file(p); return f ? parseXml(await f.async("string")) : null; };
+  const wb = await xml("xl/workbook.xml");
+  if (!wb) throw new Error("Arquivo não parece uma planilha .xlsx");
+  const rels = await xml("xl/_rels/workbook.xml.rels");
+  const relMap = {};
+  for (const r of rels.getElementsByTagName("Relationship")) relMap[r.getAttribute("Id")] = r.getAttribute("Target");
+  const sheets = [...wb.getElementsByTagName("sheet")].map(s => {
+    let t = relMap[s.getAttributeNS(NS_R,"id") || s.getAttribute("r:id")] || "";
+    t = t.startsWith("/") ? t.slice(1) : ("xl/" + t.replace(/^\.\//,""));
+    return { name: s.getAttribute("name"), path: t, el: s };
+  });
+  return { zip, xml, wb, rels, sheets };
+}
+function readCells(doc, strings){
+  const grid = new Map(); // row -> Map(col -> value)
+  for (const c of doc.getElementsByTagName("c")) {
+    const ref = splitRef(c.getAttribute("r")||""); if (!ref) continue;
+    const t = c.getAttribute("t"); const v = c.getElementsByTagName("v")[0];
+    let val = null;
+    if (t === "s") val = v ? strings[+v.textContent] : null;
+    else if (t === "inlineStr") { const is = c.getElementsByTagName("is")[0]; val = is ? [...is.getElementsByTagName("t")].map(x=>x.textContent).join("") : null; }
+    else if (t === "str" || t === "e") val = v ? v.textContent : null;
+    else if (t === "b") val = v ? v.textContent === "1" : null;
+    else val = v ? Number(v.textContent) : null;
+    if (typeof val === "string") val = val.trim();
+    if (val === null || val === "") continue;
+    if (!grid.has(ref.row)) grid.set(ref.row, new Map());
+    grid.get(ref.row).set(ref.col, val);
+  }
+  return grid;
+}
+const rowCells = (grid, r) => [...(grid.get(r) || new Map()).entries()].sort((a,b)=>colNum(a[0])-colNum(b[0]));
+const rightOf = (grid, r, col) => { for (const [c,v] of rowCells(grid,r)) if (colNum(c) > colNum(col)) return v; return null; };
+function findCell(grid, pred){ for (const r of [...grid.keys()].sort((a,b)=>a-b)) for (const [c,v] of rowCells(grid,r)) if (pred(norm(v))) return { row:r, col:c, value:v }; return null; }
+
+function parseDays(text){
+  const t = norm(text); const days = [];
+  const pats = [[0,/\bdom(ingo)?\b/],[1,/\bseg(unda)?\b/],[2,/\bter(ca)?\b/],[3,/\bqua(rta)?\b/],[4,/\bqui(nta)?\b/],[5,/\bsex(ta)?\b/],[6,/\bsab(ado)?\b/]];
+  pats.forEach(([d,re]) => { if (re.test(t)) days.push(d); });
+  return days;
+}
+function parseRest(text){
+  const t = norm(text); if (!t || /sem pausa|sem descanso/.test(t)) return 0;
+  let m = /(\d+)\s*m\s*(\d+)/.exec(t); if (m) return (+m[1])*60 + (+m[2]);
+  m = /(\d+(?:[.,]\d+)?)/.exec(t); if (!m) return 0;
+  const n = parseFloat(m[1].replace(",", "."));
+  if (/min/.test(t)) return Math.round(n*60);
+  if (/\bs\b|seg/.test(t) || n >= 15) return Math.round(n);
+  return Math.round(n*60);
+}
+const repTop = reps => { const m = /(\d+)\s*[-–a]\s*(\d+)/.exec(String(reps||"")); return m ? +m[2] : null; };
+const rirList = (rir, n) => { const parts = String(rir ?? "").split(/[·•,;/]/).map(s=>s.trim()).filter(Boolean); if (parts.length >= n) return parts.slice(0,n); return Array.from({length:n}, (_,i) => parts[i] ?? parts[parts.length-1] ?? ""); };
+const exId = (key, name, used) => { let base = key + "|" + norm(name); let id = base, i = 2; while (used.has(id)) id = base + "#" + (i++); used.add(id); return id; };
+
+async function parseWorkbook(buf, fileName){
+  const book = await openBook(buf);
+  const ssDoc = await book.xml("xl/sharedStrings.xml");
+  const strings = ssDoc ? [...ssDoc.getElementsByTagName("si")].map(si => [...si.getElementsByTagName("t")].filter(t => !(t.parentNode && t.parentNode.nodeName === "rPh")).map(t=>t.textContent).join("")) : [];
+  const sheets = [];
+  for (const sh of book.sheets) { const doc = await book.xml(sh.path); if (doc) sheets.push({ name: sh.name, grid: readCells(doc, strings) }); }
+
+  const student = {}; const library = {}; const glossary = []; const howto = []; const sessions = [];
+  const LABELS = { "aluno":"name", "objetivo":"goal", "inicio do ciclo":"start", "frequencia semanal":"freq", "frequencia":"freq", "divisao":"split", "treinador":"coach" };
+
+  for (const sh of sheets) {
+    const g = sh.grid;
+    // header row detection
+    let header = null;
+    for (const r of [...g.keys()].sort((a,b)=>a-b)) { const vals = rowCells(g,r).map(([,v]) => norm(v)); if (vals.includes("exercicio") && (vals.includes("reps") || vals.includes("validas") || vals.some(v=>v.startsWith("video")))) { header = r; break; } }
+    const isSession = header && rowCells(g, header).some(([,v]) => ["validas","reps"].includes(norm(v)));
+    if (header && !isSession) { // library
+      const cols = {}; rowCells(g, header).forEach(([c,v]) => { const n = norm(v); if (n === "exercicio") cols.name = c; else if (n.startsWith("video")) cols.url = c; else if (n === "grupo") cols.group = c; });
+      for (const r of [...g.keys()].filter(r => r > header)) { const row = g.get(r); const name = row.get(cols.name), url = row.get(cols.url); if (name && typeof url === "string" && /^https?:/.test(url)) library[norm(name)] = { name, url, group: row.get(cols.group) || "" }; }
+      continue;
+    }
+    if (isSession) {
+      const cols = {}; const weekCols = [];
+      rowCells(g, header).forEach(([c,v]) => { const n = norm(v); let m;
+        if (n === "#") cols.n = c; else if (n === "exercicio") cols.name = c; else if (n.startsWith("video")) cols.video = c; else if (n.startsWith("metodo")) cols.method = c;
+        else if (n.startsWith("aquec")) cols.warm = c; else if (n === "feeder") cols.feeder = c; else if (n === "validas") cols.sets = c; else if (n === "reps") cols.reps = c;
+        else if (n === "rir") cols.rir = c; else if (n.startsWith("descanso")) cols.rest = c; else if (n.startsWith("observ")) cols.notes = c;
+        else if ((m = /^sem(ana)?\s*(\d+)$/.exec(n))) weekCols[+m[2]-1] = c; });
+      const km = /treino\s+([a-z0-9]+)/i.exec(sh.name) || (() => { const t = findCell(g, v => /^treino\s+[a-z0-9]+$/.test(v)); return t ? /treino\s+([a-z0-9]+)/i.exec(t.value) : null; })();
+      const key = (km ? km[1] : String.fromCharCode(65 + sessions.length)).toUpperCase();
+      const focoCell = findCell(g, v => v === "foco");
+      const focoRaw = focoCell ? String(rightOf(g, focoCell.row, focoCell.col) || "") : "";
+      const focusParts = focoRaw.split("·").map(s=>s.trim()).filter(Boolean);
+      const focus = focusParts.filter(p => !parseDays(p).length).join(" · ") || focoRaw;
+      const exercises = []; const rows = []; const used = new Set();
+      for (let r = header + 1; r < header + 200; r++) {
+        const row = g.get(r) || new Map();
+        const n = cols.n ? row.get(cols.n) : null; const name = cols.name ? row.get(cols.name) : null;
+        if (n == null && !name) break;
+        rows.push(r);
+        if (!name) continue;
+        const get = k => cols[k] ? (row.get(cols[k]) ?? "") : "";
+        const lib = library[norm(name)];
+        exercises.push({ id: exId(key, name, used), name: String(name), method: String(get("method")||""), warm: get("warm"), feeder: get("feeder"), sets: numParse(get("sets")) ?? 0,
+          reps: String(get("reps")||""), rir: String(get("rir")||""), rest: String(get("rest")||""), notes: String(get("notes")||""), video: lib ? lib.url : "" });
+      }
+      const methods = [];
+      const mh = findCell(g, v => v.startsWith("como fazer os metodos"));
+      if (mh) for (let r = mh.row + 1; r < mh.row + 30; r++) { const cells = rowCells(g, r); if (!cells.length) break; if (cells.length >= 2) methods.push({ name: String(cells[0][1]), text: String(cells[1][1]) }); }
+      sessions.push({ key, sheet: sh.name, focus, days: parseDays(focoRaw), exercises, rows, cols, weekCols: weekCols.filter(Boolean), methods });
+      continue;
+    }
+    // info sheet
+    for (const r of [...g.keys()].sort((a,b)=>a-b)) {
+      for (const [c,v] of rowCells(g, r)) { const k = LABELS[norm(v)]; if (k && student[k] == null) { const val = rightOf(g, r, c); if (val != null && !LABELS[norm(val)]) student[k] = val; } }
+    }
+    const gl = findCell(g, v => v === "glossario");
+    if (gl && !glossary.length) for (let r = gl.row+1; r < gl.row+40; r++) { const cells = rowCells(g, r); if (cells.length < 2) break; glossary.push({ term: String(cells[0][1]), text: String(cells[1][1]) }); }
+    const hu = findCell(g, v => v.startsWith("como usar"));
+    if (hu && !howto.length) for (let r = hu.row+1; r < hu.row+40; r++) { const cells = rowCells(g, r); if (!cells.length) break; howto.push(String(cells[0][1]).replace(/^\d+\.\s*/,"")); }
+  }
+  if (!sessions.length) throw new Error("Não encontrei abas de treino (precisa de uma linha de cabeçalho com “Exercício” e “Reps”).");
+  // fill videos for sessions parsed before library sheet
+  sessions.forEach(s => s.exercises.forEach(e => { if (!e.video) { const lib = library[norm(e.name)]; if (lib) e.video = lib.url; } }));
+  const keys = sessions.map(s => s.key);
+  let rotation = [];
+  const fm = /\(([^)]+)\)/.exec(String(student.freq||""));
+  if (fm) rotation = fm[1].split(/[^A-Za-z0-9]+/).map(s=>s.toUpperCase()).filter(k => keys.includes(k));
+  if (!rotation.length) rotation = keys.slice();
+  let start = null;
+  if (typeof student.start === "number" && student.start > 20000) { const d = new Date(Date.UTC(1899,11,30) + student.start*86400000); start = ymd(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())); }
+  else if (typeof student.start === "string") { const m = /(\d{1,2})\/(\d{1,2})\/(\d{2,4})/.exec(student.start); if (m) start = ymd(new Date(m[3].length===2?2000+ +m[3]:+m[3], +m[2]-1, +m[1])); }
+  return {
+    program: { student: { name: String(student.name||""), goal: String(student.goal||""), freq: String(student.freq||""), split: String(student.split||""), coach: String(student.coach||""), startRaw: String(student.start ?? "") },
+      sessions, rotation, glossary, howto, library, weeks: Math.max(...sessions.map(s=>s.weekCols.length), 8), fileName: fileName || "planilha.xlsx", importedAt: Date.now() },
+    start
+  };
+}
+
+/* ============================================================
+   XLSX writing — patches the coach's own file, keeping its format
+   ============================================================ */
+function setCell(doc, ref, value){
+  const { col, row } = splitRef(ref);
+  const empty = value === "" || value == null;
+  const sd = doc.getElementsByTagNameNS(NS_MAIN, "sheetData")[0] || doc.getElementsByTagName("sheetData")[0];
+  let rowEl = [...sd.children].find(r => +r.getAttribute("r") === row);
+  if (!rowEl) { if (empty) return; rowEl = doc.createElementNS(NS_MAIN, "row"); rowEl.setAttribute("r", row); sd.insertBefore(rowEl, [...sd.children].find(r => +r.getAttribute("r") > row) || null); }
+  rowEl.removeAttribute("spans");
+  let c = [...rowEl.children].find(x => x.getAttribute("r") === ref);
+  if (!c) { if (empty) return; c = doc.createElementNS(NS_MAIN, "c"); c.setAttribute("r", ref); rowEl.insertBefore(c, [...rowEl.children].find(x => colNum(splitRef(x.getAttribute("r")).col) > colNum(col)) || null); }
+  while (c.firstChild) c.removeChild(c.firstChild);
+  c.removeAttribute("t");
+  if (empty) return;
+  if (typeof value === "number") { const v = doc.createElementNS(NS_MAIN, "v"); v.textContent = String(value); c.appendChild(v); }
+  else { c.setAttribute("t", "inlineStr"); const is = doc.createElementNS(NS_MAIN, "is"), t = doc.createElementNS(NS_MAIN, "t"); t.setAttributeNS(NS_XML, "xml:space", "preserve"); t.textContent = String(value); is.appendChild(t); c.appendChild(is); }
+}
+const cellish = v => { if (v === "" || v == null) return ""; if (typeof v === "number") return v; const n = /^\s*-?\d+([.,]\d+)?\s*$/.test(String(v)) ? numParse(v) : null; return n != null ? n : String(v); };
+
+function inCycle(l){ return !S.cycleStart || l.date >= S.cycleStart; }
+function topKg(entry){ if (!entry) return null; const ks = entry.sets.map(s => numParse(s.kg)).filter(n => n != null); return ks.length ? Math.max(...ks) : null; }
+function weekValue(key, id, w){
+  const ls = S.logs.filter(l => l.sessionKey === key && l.week === w && inCycle(l)).sort((a,b) => (a.date+a.finishedAt).localeCompare(b.date+b.finishedAt));
+  for (let i = ls.length-1; i >= 0; i--) { const v = topKg(ls[i].entries[id]); if (v != null) return v; }
+  return "";
+}
+function logSheetXml(){
+  const head = ["Data","Semana","Treino","#","Exercício","Série","Carga (kg)","Reps","RIR alvo","Aquec./feeder feitos","Observação da sessão"];
+  const rows = [head];
+  const logs = S.logs.slice().sort((a,b) => (a.date+a.finishedAt).localeCompare(b.date+b.finishedAt));
+  for (const l of logs) {
+    const s = sess(l.sessionKey); const exs = s ? s.exercises : [];
+    let first = true;
+    const ids = Object.keys(l.entries);
+    const ordered = exs.filter(e => ids.includes(e.id)).concat(ids.filter(id => !exs.some(e=>e.id===id)).map(id => ({ id, name: l.entries[id].name || id })));
+    ordered.forEach((e) => {
+      const en = l.entries[e.id]; if (!en) return; const idx = exs.indexOf(e);
+      const rirs = rirList(e.rir || "", en.sets.length);
+      en.sets.forEach((st, si) => {
+        if (numParse(st.kg) == null && numParse(st.reps) == null) return;
+        rows.push([l.date.split("-").reverse().join("/"), l.week, l.sessionKey, idx >= 0 ? idx+1 : "", e.name || en.name, si+1, numParse(st.kg) ?? "", numParse(st.reps) ?? "", rirs[si] || "", (en.warm ? "sim" : ""), first ? (l.note || "") : ""]);
+        first = false;
+      });
+    });
+    if (first && l.note) rows.push([l.date.split("-").reverse().join("/"), l.week, l.sessionKey, "", "", "", "", "", "", "", l.note]);
+  }
+  const cell = (v, r, c) => { const ref = colStr(c+1) + r; if (v === "" || v == null) return ""; if (typeof v === "number") return `<c r="${ref}"><v>${v}</v></c>`; return `<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${esc(v)}</t></is></c>`; };
+  const widths = [11,8,8,4,38,7,11,7,9,12,60];
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="${NS_MAIN}" xmlns:r="${NS_R}"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="15"/><cols>${widths.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("")}</cols><sheetData>${rows.map((r,i)=>`<row r="${i+1}">${r.map((v,c)=>cell(v,i+1,c)).join("")}</row>`).join("")}</sheetData></worksheet>`;
+}
+async function buildWorkbook(){
+  if (!TEMPLATE) throw new Error("A planilha original não está salva neste aparelho. Importe-a de novo.");
+  const book = await openBook(b64ToBuf(TEMPLATE));
+  const ser = new XMLSerializer();
+  for (const s of S.program.sessions) {
+    const sh = book.sheets.find(x => x.name === s.sheet); if (!sh) continue;
+    const doc = await book.xml(sh.path); if (!doc) continue;
+    const C = s.cols;
+    s.rows.forEach((row, i) => {
+      const e = s.exercises[i];
+      const put = (k, v) => { if (C[k]) setCell(doc, C[k] + row, v); };
+      if (e || i < s.rows.length) put("n", i + 1);
+      put("name", e ? e.name : ""); put("method", e ? e.method : ""); put("warm", e ? cellish(e.warm) : ""); put("feeder", e ? cellish(e.feeder) : "");
+      put("sets", e ? cellish(e.sets) : ""); put("reps", e ? cellish(e.reps) : ""); put("rir", e ? cellish(e.rir) : ""); put("rest", e ? cellish(e.rest) : ""); put("notes", e ? cellish(e.notes) : "");
+      s.weekCols.forEach((col, wi) => setCell(doc, col + row, e ? weekValue(s.key, e.id, wi + 1) : ""));
+    });
+    book.zip.file(sh.path, ser.serializeToString(doc));
+  }
+  // activity log sheet
+  const xml = logSheetXml();
+  const existing = book.sheets.find(x => x.name === LOG_SHEET);
+  if (existing) book.zip.file(existing.path, xml);
+  else {
+    const path = "xl/worksheets/sheet_app_log.xml";
+    book.zip.file(path, xml);
+    const rel = book.rels.createElementNS(NS_PKG, "Relationship");
+    rel.setAttribute("Id", "rIdAppLog"); rel.setAttribute("Type", NS_R + "/worksheet"); rel.setAttribute("Target", "worksheets/sheet_app_log.xml");
+    book.rels.documentElement.appendChild(rel);
+    book.zip.file("xl/_rels/workbook.xml.rels", ser.serializeToString(book.rels));
+    const ct = parseXml(await book.zip.file("[Content_Types].xml").async("string"));
+    const ov = ct.createElementNS("http://schemas.openxmlformats.org/package/2006/content-types", "Override");
+    ov.setAttribute("PartName", "/" + path); ov.setAttribute("ContentType", "application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml");
+    ct.documentElement.appendChild(ov);
+    book.zip.file("[Content_Types].xml", ser.serializeToString(ct));
+    const sheetsEl = book.wb.getElementsByTagNameNS(NS_MAIN, "sheets")[0];
+    const maxId = Math.max(0, ...[...sheetsEl.children].map(x => +x.getAttribute("sheetId") || 0));
+    const se = book.wb.createElementNS(NS_MAIN, "sheet");
+    se.setAttribute("name", LOG_SHEET); se.setAttribute("sheetId", String(maxId + 1)); se.setAttribute("state", "visible"); se.setAttributeNS(NS_R, "r:id", "rIdAppLog");
+    sheetsEl.appendChild(se);
+  }
+  let calc = book.wb.getElementsByTagNameNS(NS_MAIN, "calcPr")[0];
+  if (!calc) { calc = book.wb.createElementNS(NS_MAIN, "calcPr"); const after = book.wb.getElementsByTagNameNS(NS_MAIN, "sheets")[0]; after.parentNode.insertBefore(calc, after.nextSibling); }
+  calc.setAttribute("fullCalcOnLoad", "1");
+  book.zip.file("xl/workbook.xml", ser.serializeToString(book.wb));
+  if (book.zip.file("xl/calcChain.xml")) book.zip.remove("xl/calcChain.xml");
+  return await book.zip.generateAsync({ type: "blob", compression: "DEFLATE", mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+}
+
+/* ---------- file delivery ---------- */
+let readyFile = null;
+async function offerFile(blob, filename){
+  const dl = await cap("downloads");
+  if (dl) { try { await dl.save({ filename, data: blob }); toast("Arquivo pronto"); return true; } catch(e){ if (e && e.code === "declined") return false; } }
+  try {
+    const file = new File([blob], filename, { type: blob.type });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: filename }); return true; }
+  } catch(e){ if (e && e.name === "AbortError") return false; if (e && e.name === "NotAllowedError") { readyFile = { blob, filename }; render(); toast("Arquivo pronto. Toque em “Enviar arquivo”."); return false; } }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  return true;
+}
+async function shareText(text){
+  try { if (navigator.share && !window.claude) { await navigator.share({ text }); return; } } catch(e){ if (e && e.name === "AbortError") return; }
+  try { await navigator.clipboard.writeText(text); toast("Resumo copiado. Cole no WhatsApp."); }
+  catch(e){ UI.copyText = text; render(); toast("Selecione o texto abaixo e copie."); }
+}
+
+/* ============================================================
+   Domain helpers
+   ============================================================ */
+const P = () => S.program;
+const sess = key => P() ? P().sessions.find(s => s.key === key) : null;
+function weekOf(dateStr){
+  if (!S.cycleStart) return 1;
+  const w = Math.floor((mondayOf(parseYmd(dateStr)) - mondayOf(parseYmd(S.cycleStart))) / (7*86400000)) + 1;
+  return Math.max(1, w);
+}
+function scheduledFor(dow){ return P().sessions.filter(s => s.days.includes(dow)); }
+function logsOn(date){ return S.logs.filter(l => l.date === date); }
+function lastEntry(id, beforeLogId){
+  const ls = S.logs.filter(l => l.entries[id] && l.id !== beforeLogId).sort((a,b) => (b.date+b.finishedAt).localeCompare(a.date+a.finishedAt));
+  for (const l of ls) if (l.entries[id].sets.some(s => numParse(s.kg) != null || numParse(s.reps) != null)) return { log: l, entry: l.entries[id] };
+  return null;
+}
+function progression(ex, last){
+  if (!last) return null; const top = repTop(ex.reps); if (!top) return null;
+  const sets = last.entry.sets.filter(s => numParse(s.reps) != null);
+  if (sets.length && sets.length >= Math.max(1, Math.min(ex.sets || sets.length, last.entry.sets.length)) && sets.every(s => numParse(s.reps) >= top)) return "Bateu " + top + " reps em todas as séries válidas da última vez. Suba a carga hoje.";
+  return null;
+}
+function nextInRotation(){ const r = P().rotation; return r.length ? r[S.rotPos % r.length] : P().sessions[0].key; }
+function advanceRotation(key){ const r = P().rotation; if (!r.length) return; for (let k = 0; k < r.length; k++) { const i = (S.rotPos + k) % r.length; if (r[i] === key) { S.rotPos = (i + 1) % r.length; return; } } }
+function suggestion(){
+  const t = todayStr(), dow = new Date().getDay();
+  const done = logsOn(t).map(l => l.sessionKey);
+  const sched = scheduledFor(dow).filter(s => !done.includes(s.key));
+  const hasSchedule = P().sessions.some(s => s.days.length);
+  if (sched.length) return { key: sched[0].key, why: "Programado para " + DOW_LONG[dow] };
+  if (done.length) return { key: null, done: true, why: "Treino de hoje concluído" };
+  if (hasSchedule) {
+    for (let k = 1; k <= 7; k++) { const d = (dow + k) % 7; const s = scheduledFor(d); if (s.length) return { key: null, rest: true, next: s[0].key, nextDay: d, why: "Dia de descanso" }; }
+  }
+  return { key: nextInRotation(), why: "Próximo da rotação " + P().rotation.join(" · ") };
+}
+function sessionSummaryText(l){
+  const s = sess(l.sessionKey);
+  const lines = [`Treino ${l.sessionKey}${s && s.focus ? " · " + s.focus : ""} · ${fmtDate(l.date)} (semana ${l.week})`];
+  (s ? s.exercises : []).forEach((e, i) => {
+    const en = l.entries[e.id]; if (!en) return;
+    const sets = en.sets.filter(x => numParse(x.kg) != null || numParse(x.reps) != null).map(x => { const kg = numParse(x.kg), r = numParse(x.reps); return (kg != null ? fmtKg(kg) : "PC") + (r != null ? "×" + r : ""); });
+    if (sets.length) lines.push(`${i+1}. ${e.name}: ${sets.join(" · ")}`);
+  });
+  if (l.note) lines.push("", "Obs: " + l.note);
+  return lines.join("\n");
+}
+
+/* ============================================================
+   Import flows
+   ============================================================ */
+async function importBuffer(buf, fileName, opts = {}){
+  const { program, start } = await parseWorkbook(buf, fileName);
+  const prev = S.program;
+  if (prev) { // keep schedule tweaks the user made only if same session keys
+    program.sessions.forEach(s => { const o = prev.sessions.find(x => x.key === s.key); if (o && !s.days.length && o.days.length) s.days = o.days; });
+  }
+  S.program = program;
+  if (opts.newCycle || !S.cycleStart) S.cycleStart = start || (opts.newCycle ? todayStr() : S.cycleStart);
+  if (opts.newCycle) S.rotPos = 0;
+  S.draft = null;
+  await saveTemplate(bufToB64(buf));
+  persist();
+}
+async function handleFile(file){
+  try {
+    const buf = await file.arrayBuffer();
+    const hadProgram = !!S.program;
+    await importBuffer(buf, file.name, { newCycle: hadProgram && UI.importNewCycle });
+    UI.tab = "treinos"; UI.view = null; UI.importNewCycle = false;
+    toast(`Planilha importada: ${P().sessions.length} treinos, ${P().sessions.reduce((a,s)=>a+s.exercises.length,0)} exercícios`);
+    render();
+  } catch(e){ console.error(e); toast("Não consegui ler a planilha: " + (e.message || e)); }
+}
+
+/* ============================================================
+   Rendering
+   ============================================================ */
+const ICONS = {
+  hoje: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M9 15l2 2 4-4"/></svg>',
+  treinos: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6.5 7v10M17.5 7v10M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/></svg>',
+  historico: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V5M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>',
+  plano: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-10A.5.5 0 0 1 7 20z" transform="translate(-1 0)"/><path d="M13 3.5V8h4M9 12h6M9 15.5h6"/></svg>',
+  back: '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  play: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
+  clock: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg>'
+};
+function renderTabs(){
+  const tabs = [["hoje","Hoje"],["treinos","Treinos"],["historico","Histórico"],["plano","Plano"]];
+  $("#tabs").hidden = !!UI.view;
+  $("#tabs").innerHTML = `<div class="in">${tabs.map(([k,l]) => `<button class="tab" data-act="tab" data-tab="${k}" ${UI.tab===k&&!UI.view?'aria-current="page"':''}>${ICONS[k]}<span>${l}</span></button>`).join("")}</div>`;
+}
+function header(title, eyebrow, right = ""){ return `<div class="top"><div style="min-width:0"><span class="label eyebrow">${esc(eyebrow)}</span><h1>${esc(title)}</h1></div>${right}</div>`; }
+
+function viewOnboarding(){
+  return header("Série Válida", "Seu caderno de treino") + `<main>
+    <div class="card stack">
+      <h2>Comece pela planilha do treinador</h2>
+      <p class="muted">Importe o arquivo .xlsx que o treinador enviou. O app lê as abas de treino, monta as sessões, a agenda da semana e os links dos vídeos.</p>
+      <div class="drop"><button class="btn primary" data-act="pick-file">Importar planilha (.xlsx)</button><span class="small muted">No iPhone: o arquivo pode estar em Arquivos › Downloads ou no WhatsApp › Documentos.</span></div>
+    </div>
+    <div class="card flat stack small">
+      <span class="label">Como funciona</span>
+      <p>1. O treinador manda a planilha. 2. Você treina e registra a carga de cada série válida. 3. No fim do ciclo, ou quando quiser, você devolve a mesma planilha preenchida nas colunas Sem 1 a Sem 8.</p>
+    </div>
+  </main>`;
+}
+
+function weekStrip(){
+  const mon = mondayOf(new Date()); const t = todayStr();
+  return `<div class="week">${Array.from({length:7}, (_, i) => { const d = new Date(mon); d.setDate(mon.getDate()+i); const ds = ymd(d); const dow = d.getDay();
+    const sched = scheduledFor(dow).map(s=>s.key); const done = logsOn(ds).map(l=>l.sessionKey);
+    const letters = done.length ? done : sched;
+    return `<div class="day ${ds===t?"today":""} ${done.length?"done":""}" aria-label="${DOW_LONG[dow]}: ${letters.length?"treino "+letters.join(", "):"descanso"}${done.length?" (feito)":""}"><span>${DOW_SHORT[dow]}</span><b>${letters.join("") || "·"}</b><span class="dot"></span></div>`; }).join("")}</div>`;
+}
+function viewToday(){
+  const p = P(); const sug = suggestion(); const t = todayStr(); const wk = weekOf(t);
+  const first = (p.student.name || "").split(" ")[0];
+  let heroHtml;
+  if (S.draft) {
+    const s = sess(S.draft.sessionKey);
+    heroHtml = `<div class="card stack"><div class="hero"><span class="badge lg">${esc(S.draft.sessionKey)}</span><div style="min-width:0"><span class="pill warn">Em andamento</span><h2>${esc(s ? s.focus || "Treino "+s.key : "Treino")}</h2><p class="muted small">Começou ${fmtDate(S.draft.date)}</p></div></div><button class="btn primary block" data-act="resume">Continuar sessão</button></div>`;
+  } else if (sug.key) {
+    const s = sess(sug.key); const vol = s.exercises.reduce((a,e)=>a+(e.sets||0),0);
+    heroHtml = `<div class="card stack"><span class="label">${esc(sug.why)}</span><div class="hero"><span class="badge lg">${esc(s.key)}</span><div style="min-width:0"><h2>${esc(s.focus || "Treino " + s.key)}</h2><p class="muted small num">${s.exercises.length} exercícios · ${vol} séries válidas</p></div></div><button class="btn primary block" data-act="start" data-key="${esc(s.key)}">${ICONS.play} Começar treino ${esc(s.key)}</button></div>`;
+  } else if (sug.done) {
+    const l = logsOn(t)[0];
+    heroHtml = `<div class="card stack"><span class="pill good" style="align-self:flex-start">Feito hoje</span><div class="hero"><span class="badge lg" style="background:var(--good)">${esc(l.sessionKey)}</span><div style="min-width:0"><h2>Treino concluído</h2><p class="muted small">${l.note ? esc(l.note) : "Sem observações."}</p></div></div><div class="row"><button class="btn" data-act="open-log" data-id="${l.id}">Ver registro</button><button class="btn ghost" data-act="share-log" data-id="${l.id}">Compartilhar resumo</button></div></div>`;
+  } else {
+    const n = sess(sug.next);
+    heroHtml = `<div class="card stack"><span class="label">Dia de descanso</span><div class="hero"><span class="badge lg soft">${esc(sug.next)}</span><div style="min-width:0"><h2>Próximo: ${esc(n.focus || "Treino "+n.key)}</h2><p class="muted small">${esc(DOW_LONG[sug.nextDay])}</p></div></div><button class="btn block" data-act="start" data-key="${esc(n.key)}">Treinar ${esc(n.key)} hoje mesmo assim</button></div>`;
+  }
+  const others = p.sessions.map(s => `<button class="choice" data-act="start" data-key="${esc(s.key)}" ${S.draft?"disabled":""}><span class="badge soft">${esc(s.key)}</span><span><b>${esc(s.focus || "Treino "+s.key)}</b><small>${s.days.length ? s.days.map(d=>DOW_SHORT[d]).join(", ") : s.exercises.length+" exercícios"}</small></span></button>`).join("");
+  const weekLogs = S.logs.filter(l => mondayOf(parseYmd(l.date)).getTime() === mondayOf(new Date()).getTime()).length;
+  return header(first ? "Olá, " + first : "Hoje", `Semana ${wk}${p.weeks ? " de " + p.weeks : ""} · ${fmtDate(t)}`) + `<main>
+    <div class="card flat stack"><div class="spread"><span class="label">Esta semana</span><span class="small muted num">${weekLogs} de ${p.rotation.length} treinos</span></div>${weekStrip()}</div>
+    ${heroHtml}
+    <section class="stack"><span class="label">Escolher outro treino</span><div class="choices">${others}</div></section>
+  </main>`;
+}
+
+function exMeta(e){
+  const parts = [];
+  if (e.method && norm(e.method) !== "tradicional") parts.push(`<span class="pill accent">${esc(e.method)}</span>`);
+  parts.push(`<span class="pill num">${e.sets || 0} × ${esc(e.reps || "–")}</span>`);
+  if (e.rir && e.rir !== "-") parts.push(`<span class="pill num">RIR ${esc(e.rir)}</span>`);
+  if (e.rest) parts.push(`<span class="pill">${ICONS.clock} ${esc(e.rest)}</span>`);
+  return parts.join("");
+}
+function viewRunner(){
+  const d = S.draft; const s = sess(d.sessionKey);
+  if (!s) { S.draft = null; persist(); UI.view = null; return viewToday(); }
+  const cards = s.exercises.map((e, i) => {
+    const en = d.entries[e.id] || { sets: [] };
+    const last = lastEntry(e.id, d.editingId);
+    const hint = progression(e, last);
+    const n = Math.max(1, e.sets || 1);
+    const rirs = rirList(e.rir, n);
+    const lastSets = last ? last.entry.sets : [];
+    const warmN = (numParse(e.warm) || 0), feedN = (numParse(e.feeder) || 0);
+    const meth = s.methods.find(m => norm(m.name) === norm(e.method));
+    const rows = Array.from({length: n}, (_, si) => {
+      const st = en.sets[si] || {}; const ls = lastSets[si] || {};
+      return `<div class="set"><div class="lbl"><b>Série ${si+1}</b><small>${rirs[si] && rirs[si] !== "-" ? "RIR " + esc(rirs[si]) : "&nbsp;"}</small></div>
+        <div class="field"><input id="kg-${i}-${si}" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-label="${esc(e.name)} série ${si+1} carga em kg" data-ex="${esc(e.id)}" data-set="${si}" data-k="kg" value="${esc(st.kg ?? "")}" placeholder="${esc(ls.kg ?? "")}"><span>kg</span></div>
+        <div class="field"><input id="rp-${i}-${si}" inputmode="numeric" enterkeyhint="next" autocomplete="off" aria-label="${esc(e.name)} série ${si+1} repetições" data-ex="${esc(e.id)}" data-set="${si}" data-k="reps" value="${esc(st.reps ?? "")}" placeholder="${esc(ls.reps ?? "")}"><span>rep</span></div></div>`;
+    }).join("");
+    const lastTxt = last ? `Última vez (${fmtDate(last.log.date)}): ` + last.entry.sets.filter(x => numParse(x.kg)!=null || numParse(x.reps)!=null).map(x => (numParse(x.kg)!=null?fmtKg(numParse(x.kg)):"PC") + (numParse(x.reps)!=null?"×"+numParse(x.reps):"")).join(" · ") : "Primeira vez neste ciclo";
+    const restS = parseRest(e.rest);
+    return `<article class="card ex" id="ex-${i}">
+      <div class="ex-head"><span class="badge">${i+1}</span><div style="min-width:0;flex:1"><h3>${esc(e.name)}</h3><div class="ex-meta" style="margin-top:6px">${exMeta(e)}</div></div></div>
+      ${e.notes ? `<p class="ex-notes">${esc(e.notes)}</p>` : ""}
+      ${meth ? `<p class="ex-notes method small"><b>${esc(meth.name)}:</b> ${esc(meth.text)}</p>` : ""}
+      ${(warmN || feedN) ? `<div class="warmups">${warmN ? `<button class="chk" data-act="warm" data-ex="${esc(e.id)}" aria-pressed="${en.warm?"true":"false"}">Aquecimento ${warmN}×</button>` : ""}${feedN ? `<button class="chk" data-act="feed" data-ex="${esc(e.id)}" aria-pressed="${en.feed?"true":"false"}">Feeder ${feedN}×</button>` : ""}</div>` : ""}
+      ${hint ? `<p class="hint up">${esc(hint)}</p>` : `<p class="small muted num">${esc(lastTxt)}</p>`}
+      <div class="sets"><div class="set-head"><span>Série válida</span><span>Carga</span><span>Reps</span></div>${rows}</div>
+      <div class="row">${restS ? `<button class="btn sm" data-act="timer" data-secs="${restS}" data-label="${esc(e.name)}">${ICONS.clock} Descanso ${Math.floor(restS/60)}:${pad(restS%60)}</button>` : ""}${e.video ? `<a class="btn sm ghost" href="${esc(e.video)}" target="_blank" rel="noopener">Ver execução ↗</a>` : ""}</div>
+    </article>`;
+  }).join("");
+  const right = `<button class="icon-btn" data-act="close-runner" aria-label="Sair (o rascunho fica salvo)">${ICONS.back}</button>`;
+  return `<div class="top"><div class="row" style="flex-wrap:nowrap;min-width:0">${right}<div style="min-width:0"><span class="label eyebrow">${d.editingId ? "Editando registro" : "Treino " + esc(s.key)} · semana <span class="num">${d.week}</span> · ${fmtDate(d.date)}</span><h1>${esc(s.focus || "Treino " + s.key)}</h1></div></div></div>
+  <main>${cards}
+    <section class="card stack">
+      <h3>Fim da sessão</h3>
+      <label class="f" for="note">Observações para o treinador<textarea id="note" data-k="note" placeholder="Como foi? Dor, desconforto, máquina diferente, energia do dia…">${esc(d.note || "")}</textarea></label>
+      <div class="grid2"><label class="f" for="d-date">Data<input class="input" type="date" id="d-date" data-k="date" value="${esc(d.date)}"></label><label class="f" for="d-week">Semana do ciclo<input class="input num" type="number" min="1" max="52" id="d-week" data-k="week" value="${d.week}"></label></div>
+      <button class="btn primary block" data-act="finish">${d.editingId ? "Salvar alterações" : "Concluir sessão"}</button>
+      ${UI.confirm === "discard" ? `<div class="confirm"><b>Descartar este rascunho?</b><span class="small">As cargas digitadas nesta sessão serão apagadas.</span><div class="row"><button class="btn sm danger" data-act="discard-yes">Descartar</button><button class="btn sm" data-act="confirm-no">Manter</button></div></div>` : `<button class="btn ghost danger" data-act="discard">Descartar rascunho</button>`}
+    </section></main>`;
+}
+function viewDone(){
+  const l = S.logs.find(x => x.id === UI.lastDoneId); if (!l) { UI.view = null; return viewToday(); }
+  const txt = sessionSummaryText(l);
+  const filled = Object.values(l.entries).reduce((a, en) => a + en.sets.filter(s => numParse(s.kg)!=null || numParse(s.reps)!=null).length, 0);
+  return header("Sessão salva", `Treino ${l.sessionKey} · ${fmtDate(l.date)}`) + `<main>
+    <div class="card stack"><div class="hero"><span class="badge lg" style="background:var(--good)">${esc(l.sessionKey)}</span><div><h2 class="num">${filled} ${filled === 1 ? "série registrada" : "séries registradas"}</h2><p class="muted small">Semana ${l.week} do ciclo</p></div></div>
+    <pre class="ex-notes small" style="white-space:pre-wrap;font-family:var(--f-body);margin:0">${esc(txt)}</pre>
+    <button class="btn primary block" data-act="share-log" data-id="${l.id}">Enviar resumo ao treinador</button>
+    ${UI.copyText ? `<textarea readonly id="copybox" onfocus="this.select()">${esc(UI.copyText)}</textarea>` : ""}
+    <button class="btn block" data-act="home">Voltar para Hoje</button></div></main>`;
+}
+
+function viewTreinos(){
+  const p = P(); const coach = S.coachMode;
+  const list = p.sessions.map(s => {
+    if (coach && UI.editKey === s.key) return editSession(s);
+    return `<section class="card stack">
+      <div class="spread"><div class="row" style="flex-wrap:nowrap;min-width:0"><span class="badge">${esc(s.key)}</span><div style="min-width:0"><h2>${esc(s.focus || "Treino " + s.key)}</h2><p class="small muted">${s.days.length ? s.days.map(d=>DOW_LONG[d]).join(", ") : "sem dia fixo"}</p></div></div>
+      ${coach ? `<button class="btn sm" data-act="edit-session" data-key="${esc(s.key)}">Editar</button>` : `<button class="btn sm primary" data-act="start" data-key="${esc(s.key)}" ${S.draft?"disabled":""}>Treinar</button>`}</div>
+      <div class="list">${s.exercises.map((e, i) => `<div class="li"><span class="badge soft">${i+1}</span><div class="grow"><b>${esc(e.name)}</b><div class="ex-meta" style="margin-top:4px">${exMeta(e)}</div>${e.notes ? `<p class="small muted" style="white-space:normal;margin-top:4px">${esc(e.notes)}</p>` : ""}</div></div>`).join("")}</div>
+      ${s.methods.length ? `<details><summary>Como fazer os métodos</summary><div><dl>${s.methods.map(m => `<dt>${esc(m.name)}</dt><dd>${esc(m.text)}</dd>`).join("")}</dl></div></details>` : ""}
+    </section>`;
+  }).join("");
+  const right = `<button class="btn sm ${coach?"primary":""}" data-act="toggle-coach" aria-pressed="${coach}">${coach ? "Modo treinador: ligado" : "Modo treinador"}</button>`;
+  return header("Treinos", `Rotação ${p.rotation.join(" · ")} · ${p.student.split || ""}`, right) + `<main>
+    ${coach ? `<div class="card flat small stack"><b>Modo treinador</b><span class="muted">Edite exercícios, instruções e dias. Depois exporte a planilha em Plano e envie ao aluno. Cada treino comporta até ${Math.max(...p.sessions.map(s=>s.rows.length))} exercícios, as linhas da planilha.</span>
+      <label class="f" for="rot">Rotação (ordem dos treinos na semana)<input class="input" id="rot" data-coach="rotation" value="${esc(p.rotation.join(" "))}"></label></div>` : ""}
+    ${list}</main>`;
+}
+function editSession(s){
+  const libNames = Object.values(P().library).map(l => l.name);
+  const fields = (e, i) => `<div class="edit-ex">
+    <div class="row"><span class="badge soft">${i+1}</span><div class="tools"><button class="icon-btn" data-act="ex-up" data-i="${i}" aria-label="Subir">↑</button><button class="icon-btn" data-act="ex-down" data-i="${i}" aria-label="Descer">↓</button><button class="icon-btn" data-act="ex-del" data-i="${i}" aria-label="Remover" style="color:var(--bad)">✕</button></div></div>
+    <label class="f" for="e-${i}-name">Exercício<input class="input" id="e-${i}-name" list="libnames" data-edit="${i}" data-f="name" value="${esc(e.name)}"></label>
+    <div class="grid3">
+      <label class="f" for="e-${i}-method">Método<input class="input" id="e-${i}-method" data-edit="${i}" data-f="method" value="${esc(e.method)}"></label>
+      <label class="f" for="e-${i}-warm">Aquec.<input class="input" id="e-${i}-warm" data-edit="${i}" data-f="warm" value="${esc(e.warm)}"></label>
+      <label class="f" for="e-${i}-feeder">Feeder<input class="input" id="e-${i}-feeder" data-edit="${i}" data-f="feeder" value="${esc(e.feeder)}"></label>
+      <label class="f" for="e-${i}-sets">Válidas<input class="input num" id="e-${i}-sets" inputmode="numeric" data-edit="${i}" data-f="sets" value="${esc(e.sets)}"></label>
+      <label class="f" for="e-${i}-reps">Reps<input class="input" id="e-${i}-reps" data-edit="${i}" data-f="reps" value="${esc(e.reps)}"></label>
+      <label class="f" for="e-${i}-rir">RIR por série<input class="input" id="e-${i}-rir" data-edit="${i}" data-f="rir" value="${esc(e.rir)}"></label>
+    </div>
+    <label class="f" for="e-${i}-rest">Descanso<input class="input" id="e-${i}-rest" data-edit="${i}" data-f="rest" value="${esc(e.rest)}"></label>
+    <label class="f" for="e-${i}-notes">Instruções de execução<textarea id="e-${i}-notes" data-edit="${i}" data-f="notes" style="min-height:72px">${esc(e.notes)}</textarea></label>
+  </div>`;
+  return `<section class="card stack" id="edit-${esc(s.key)}">
+    <div class="spread"><div class="row" style="flex-wrap:nowrap"><span class="badge">${esc(s.key)}</span><h2>Editar treino ${esc(s.key)}</h2></div><button class="btn sm primary" data-act="edit-done">Pronto</button></div>
+    <label class="f" for="s-focus">Foco<input class="input" id="s-focus" data-sess="focus" value="${esc(s.focus)}"></label>
+    <div class="f"><span>Dias da semana</span><div class="days">${[1,2,3,4,5,6,0].map(d => `<button data-act="toggle-day" data-day="${d}" aria-pressed="${s.days.includes(d)}">${DOW_SHORT[d]}</button>`).join("")}</div></div>
+    ${s.exercises.map(fields).join("")}
+    <datalist id="libnames">${libNames.map(n => `<option value="${esc(n)}"></option>`).join("")}</datalist>
+    <button class="btn" data-act="ex-add" ${s.exercises.length >= s.rows.length ? "disabled" : ""}>+ Adicionar exercício</button>
+    ${s.exercises.length >= s.rows.length ? `<p class="small muted">A planilha tem ${s.rows.length} linhas neste treino. Para mais exercícios, aumente a tabela na planilha e importe de novo.</p>` : ""}
+  </section>`;
+}
+
+function viewHistorico(){
+  const seg = `<div class="seg" role="group" aria-label="Visão"><button data-act="hist" data-mode="sessoes" aria-pressed="${UI.histMode==="sessoes"}">Sessões</button><button data-act="hist" data-mode="carga" aria-pressed="${UI.histMode==="carga"}">Carga por semana</button></div>`;
+  let body;
+  const logs = S.logs.slice().sort((a,b) => (b.date+b.finishedAt).localeCompare(a.date+a.finishedAt));
+  if (!logs.length) body = `<div class="card empty"><h2>Nenhuma sessão ainda</h2><p class="muted">Quando você concluir o primeiro treino, ele aparece aqui com as cargas e a sua observação.</p><button class="btn primary" data-act="tab" data-tab="hoje">Ir para Hoje</button></div>`;
+  else if (UI.histMode === "sessoes") {
+    body = `<div class="card"><div class="list">${logs.map(l => { const s = sess(l.sessionKey); const n = Object.values(l.entries).reduce((a,en)=>a+en.sets.filter(x=>numParse(x.kg)!=null||numParse(x.reps)!=null).length,0);
+      return `<button class="li" data-act="open-log" data-id="${l.id}"><span class="badge">${esc(l.sessionKey)}</span><div class="grow"><div class="spread"><b>${esc(s ? s.focus || "Treino "+s.key : "Treino "+l.sessionKey)}</b><span class="small muted num">${fmtDate(l.date)}</span></div><p class="small muted">Sem ${l.week} · ${n} ${n === 1 ? "série" : "séries"}${l.note ? " · " + esc(l.note) : ""}</p></div></button>`; }).join("")}</div></div>`;
+  } else {
+    const W = P().weeks || 8;
+    body = P().sessions.map(s => `<section class="card stack"><div class="row"><span class="badge">${esc(s.key)}</span><h3>${esc(s.focus || "Treino "+s.key)}</h3></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Exercício</th>${Array.from({length:W},(_,w)=>`<th>S${w+1}</th>`).join("")}<th>Evol.</th></tr></thead><tbody>
+      ${s.exercises.map(e => { const vals = Array.from({length:W}, (_,w) => weekValue(s.key, e.id, w+1)); const nums = vals.filter(v => v !== ""); const evo = nums.length >= 2 ? nums[nums.length-1] - nums[0] : null;
+        return `<tr><td>${esc(e.name)}</td>${vals.map(v => `<td>${v === "" ? '<span class="muted">·</span>' : fmtKg(v)}</td>`).join("")}<td class="${evo>0?"up":""}">${evo == null ? "" : (evo>0?"+":"") + fmtKg(evo)}</td></tr>`; }).join("")}
+      </tbody></table></div></section>`).join("") + `<p class="small muted">Maior carga das séries válidas na última sessão de cada semana. É o mesmo número que vai para as colunas Sem 1 a Sem ${W} da planilha.</p>`;
+  }
+  return header("Histórico", `${S.logs.length} sessões registradas`, "") + `<main>${S.logs.length ? seg : ""}${body}</main>`;
+}
+function viewLog(){
+  const l = S.logs.find(x => x.id === UI.logId); if (!l) { UI.view = null; return viewHistorico(); }
+  const s = sess(l.sessionKey);
+  const rows = (s ? s.exercises : []).map((e, i) => { const en = l.entries[e.id]; if (!en) return ""; const sets = en.sets.filter(x => numParse(x.kg)!=null || numParse(x.reps)!=null);
+    return `<div class="li"><span class="badge soft">${i+1}</span><div class="grow"><b>${esc(e.name)}</b><p class="small muted num" style="white-space:normal">${sets.length ? sets.map(x => (numParse(x.kg)!=null?fmtKg(numParse(x.kg))+" kg":"PC") + (numParse(x.reps)!=null?" × "+numParse(x.reps):"")).join(" · ") : "sem registro"}</p></div></div>`; }).join("");
+  return `<div class="top"><div class="row" style="flex-wrap:nowrap;min-width:0"><button class="icon-btn" data-act="back" aria-label="Voltar">${ICONS.back}</button><div style="min-width:0"><span class="label eyebrow">Treino ${esc(l.sessionKey)} · semana ${l.week}</span><h1>${fmtDate(l.date)}</h1></div></div></div>
+  <main><div class="card stack"><div class="list">${rows}</div>${l.note ? `<div class="ex-notes"><span class="label">Observação</span><p>${esc(l.note)}</p></div>` : ""}</div>
+  <div class="row"><button class="btn primary" data-act="share-log" data-id="${l.id}">Compartilhar resumo</button><button class="btn" data-act="edit-log" data-id="${l.id}" ${S.draft?"disabled":""}>Editar</button>
+  ${UI.confirm === "del-"+l.id ? "" : `<button class="btn ghost danger" data-act="del-log" data-id="${l.id}">Apagar</button>`}</div>
+  ${UI.confirm === "del-"+l.id ? `<div class="confirm"><b>Apagar esta sessão?</b><span class="small">As cargas e a observação deste dia serão removidas.</span><div class="row"><button class="btn sm danger" data-act="del-yes" data-id="${l.id}">Apagar</button><button class="btn sm" data-act="confirm-no">Cancelar</button></div></div>` : ""}
+  ${UI.copyText ? `<textarea readonly id="copybox" onfocus="this.select()">${esc(UI.copyText)}</textarea>` : ""}
+  </main>`;
+}
+
+function viewPlano(){
+  const p = P(); const st = p.student;
+  const info = [["Aluno", st.name], ["Objetivo", st.goal], ["Frequência", st.freq], ["Divisão", st.split], ["Treinador", st.coach]].filter(x => x[1]);
+  return header("Plano", p.fileName) + `<main>
+    <section class="card stack"><dl>${info.map(([k,v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
+      <div class="grid2"><label class="f" for="cyc">Início do ciclo<input class="input" type="date" id="cyc" data-plan="cycleStart" value="${esc(S.cycleStart || "")}"></label><label class="f" for="wks">Semanas no ciclo<input class="input num" type="number" min="1" max="52" id="wks" data-plan="weeks" value="${p.weeks}"></label></div>
+      <p class="small muted">${S.cycleStart ? "Hoje é a semana " + weekOf(todayStr()) + " do ciclo." : "O ciclo começa no dia do primeiro treino registrado."}</p>
+    </section>
+    <section class="card stack"><h3>Devolver ao treinador</h3>
+      <p class="small muted">Gera a planilha original preenchida: a maior carga de cada semana vai para as colunas Sem 1 a Sem ${p.weeks}, e uma aba nova, “${LOG_SHEET}”, traz cada série, as reps e as suas observações.</p>
+      <button class="btn primary block" data-act="export" ${S.logs.length || S.coachMode ? "" : "disabled"}>Exportar planilha preenchida</button>
+      ${readyFile ? `<button class="btn block" data-act="send-ready">Enviar arquivo (${esc(readyFile.filename)})</button>` : ""}
+      ${!S.logs.length ? `<p class="small muted">Disponível depois do primeiro treino registrado.</p>` : ""}
+    </section>
+    <section class="card stack"><h3>Nova planilha do treinador</h3>
+      <p class="small muted">Importar substitui os treinos. O histórico continua: exercícios com o mesmo nome mantêm a última carga.</p>
+      <label class="row small" for="newcyc"><input type="checkbox" id="newcyc" data-plan="newCycle" ${UI.importNewCycle?"checked":""}> Começar um novo ciclo hoje (semana 1)</label>
+      <button class="btn block" data-act="pick-file">Importar planilha (.xlsx)</button>
+    </section>
+    ${p.howto.length || p.glossary.length ? `<section class="card stack"><h3>Orientações do treinador</h3>
+      ${p.howto.length ? `<details open><summary>Como usar</summary><div><ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">${p.howto.map(h => `<li>${esc(h)}</li>`).join("")}</ol></div></details>` : ""}
+      ${p.glossary.length ? `<details><summary>Glossário</summary><div><dl>${p.glossary.map(g => `<dt>${esc(g.term)}</dt><dd>${esc(g.text)}</dd>`).join("")}</dl></div></details>` : ""}
+    </section>` : ""}
+    <section class="card flat stack small"><h3>Cópia de segurança</h3>
+      <p class="muted">${remote.ready ? "Seus dados ficam salvos na sua conta e neste aparelho." : "Seus dados ficam só neste aparelho. Faça um backup de vez em quando ou antes de trocar de celular."}</p>
+      <div class="row"><button class="btn sm" data-act="backup">Salvar backup (.json)</button><button class="btn sm" data-act="restore">Restaurar backup</button></div>
+      <p class="muted">Versão ${APP_VERSION}</p>
+    </section>
+  </main>`;
+}
+
+function render(){
+  const app = $("#app");
+  const sy = window.scrollY;
+  let html;
+  if (!S.program) { html = viewOnboarding(); UI.view = null; }
+  else if (UI.view === "runner" && S.draft) html = viewRunner();
+  else if (UI.view === "done") html = viewDone();
+  else if (UI.view === "log") html = viewLog();
+  else { UI.view = null; html = ({ hoje: viewToday, treinos: viewTreinos, historico: viewHistorico, plano: viewPlano }[UI.tab] || viewToday)(); }
+  app.innerHTML = html;
+  renderTabs(); $("#tabs").hidden = !S.program || !!UI.view;
+  if (UI.keepScroll) window.scrollTo(0, sy); UI.keepScroll = false;
+}
+function go(fn){ UI.copyText = null; UI.confirm = null; fn(); render(); window.scrollTo(0, 0); }
+
+/* ============================================================
+   Actions
+   ============================================================ */
+function startSession(key, editLog){
+  if (editLog) { S.draft = { sessionKey: editLog.sessionKey, date: editLog.date, week: editLog.week, entries: JSON.parse(JSON.stringify(editLog.entries)), note: editLog.note || "", startedAt: Date.now(), editingId: editLog.id }; }
+  else { const t = todayStr(); if (!S.cycleStart) S.cycleStart = t; S.draft = { sessionKey: key, date: t, week: Math.min(weekOf(t), 52), entries: {}, note: "", startedAt: Date.now() }; }
+  persist(); UI.view = "runner"; requestWakeLock();
+}
+function finishSession(){
+  const d = S.draft; const s = sess(d.sessionKey);
+  // keep names for history robustness
+  Object.keys(d.entries).forEach(id => { const e = s && s.exercises.find(x => x.id === id); if (e) d.entries[id].name = e.name; });
+  let log;
+  if (d.editingId) { log = S.logs.find(l => l.id === d.editingId); if (log) Object.assign(log, { date: d.date, week: d.week, entries: d.entries, note: d.note.trim(), updatedAt: Date.now() }); }
+  if (!log) { log = { id: uid(), sessionKey: d.sessionKey, date: d.date, week: d.week, entries: d.entries, note: d.note.trim(), finishedAt: new Date().toISOString(), updatedAt: Date.now() }; S.logs.push(log); advanceRotation(d.sessionKey); }
+  S.draft = null; persist(log.id); stopTimer(); releaseWakeLock();
+  UI.lastDoneId = log.id; UI.view = "done";
+}
+function moveEx(s, i, dir){ const j = i + dir; if (j < 0 || j >= s.exercises.length) return; const a = s.exercises; [a[i], a[j]] = [a[j], a[i]]; }
+
+document.addEventListener("click", async ev => {
+  const b = ev.target.closest("[data-act]"); if (!b || b.disabled) return;
+  const act = b.dataset.act;
+  const s = UI.editKey ? sess(UI.editKey) : null;
+  switch (act) {
+    case "tab": go(() => { UI.tab = b.dataset.tab; UI.view = null; UI.editKey = null; }); break;
+    case "pick-file": $("#file").value = ""; $("#file").click(); break;
+    case "start": go(() => startSession(b.dataset.key)); break;
+    case "resume": go(() => { UI.view = "runner"; requestWakeLock(); }); break;
+    case "close-runner": go(() => { UI.view = null; UI.tab = "hoje"; releaseWakeLock(); }); break;
+    case "finish": go(finishSession); break;
+    case "discard": UI.confirm = "discard"; UI.keepScroll = true; render(); break;
+    case "discard-yes": go(() => { S.draft = null; persist(); UI.view = null; stopTimer(); releaseWakeLock(); }); break;
+    case "confirm-no": UI.confirm = null; UI.keepScroll = true; render(); break;
+    case "warm": case "feed": { const k = act === "warm" ? "warm" : "feed"; const en = S.draft.entries[b.dataset.ex] || (S.draft.entries[b.dataset.ex] = { sets: [] }); en[k] = !en[k]; b.setAttribute("aria-pressed", en[k] ? "true" : "false"); persist(); break; }
+    case "timer": startTimer(+b.dataset.secs, b.dataset.label); break;
+    case "home": go(() => { UI.view = null; UI.tab = "hoje"; }); break;
+    case "share-log": { const l = S.logs.find(x => x.id === b.dataset.id); if (l) await shareText(sessionSummaryText(l)); break; }
+    case "open-log": go(() => { UI.view = "log"; UI.logId = b.dataset.id; }); break;
+    case "back": go(() => { UI.view = null; }); break;
+    case "edit-log": { const l = S.logs.find(x => x.id === b.dataset.id); if (l) go(() => startSession(null, l)); break; }
+    case "del-log": UI.confirm = "del-" + b.dataset.id; UI.keepScroll = true; render(); break;
+    case "del-yes": go(() => { S.logs = S.logs.filter(x => x.id !== b.dataset.id); deletedLogs.add(b.dataset.id); persist(); UI.view = null; UI.tab = "historico"; }); break;
+    case "hist": go(() => { UI.histMode = b.dataset.mode; }); break;
+    case "toggle-coach": go(() => { S.coachMode = !S.coachMode; UI.editKey = null; persist(); }); break;
+    case "edit-session": UI.editKey = b.dataset.key; render(); { const el = document.getElementById("edit-" + b.dataset.key); if (el) el.scrollIntoView({ block: "start" }); } break;
+    case "edit-done": go(() => { UI.editKey = null; }); break;
+    case "toggle-day": { const d = +b.dataset.day; s.days = s.days.includes(d) ? s.days.filter(x => x !== d) : s.days.concat(d).sort(); persist(); UI.keepScroll = true; render(); break; }
+    case "ex-up": moveEx(s, +b.dataset.i, -1); persist(); UI.keepScroll = true; render(); break;
+    case "ex-down": moveEx(s, +b.dataset.i, 1); persist(); UI.keepScroll = true; render(); break;
+    case "ex-del": s.exercises.splice(+b.dataset.i, 1); persist(); UI.keepScroll = true; render(); break;
+    case "ex-add": { const used = new Set(s.exercises.map(e => e.id)); s.exercises.push({ id: exId(s.key, "novo " + uid(), used), name: "", method: "Tradicional", warm: "-", feeder: "-", sets: 3, reps: "8-12", rir: "", rest: "1m30-2 min", notes: "", video: "" }); persist(); UI.keepScroll = true; render(); const el = document.getElementById("e-" + (s.exercises.length-1) + "-name"); if (el) { el.scrollIntoView({ block: "center" }); el.focus(); } break; }
+    case "export": {
+      b.disabled = true; const old = b.textContent; b.textContent = "Gerando planilha…";
+      try { const blob = await buildWorkbook(); const base = (P().fileName || "planilha.xlsx").replace(/\.xlsx$/i, ""); const name = `${base.replace(/ ?- ?preenchida.*$/,"")} - preenchida ${todayStr().split("-").reverse().join("-")}.xlsx`; readyFile = { blob, filename: name }; await offerFile(blob, name); }
+      catch(e){ console.error(e); toast("Não consegui gerar a planilha: " + (e.message || e)); }
+      b.disabled = false; b.textContent = old; break; }
+    case "send-ready": if (readyFile) { const f = readyFile; readyFile = null; await offerFile(f.blob, f.filename); render(); } break;
+    case "backup": { const data = JSON.stringify({ app: "serie-valida", version: APP_VERSION, exportedAt: new Date().toISOString(), state: S, template: TEMPLATE }); await offerFile(new Blob([data], { type: "application/json" }), `serie-valida-backup-${todayStr()}.json`); break; }
+    case "restore": $("#backupFile").value = ""; $("#backupFile").click(); break;
+  }
+});
+document.addEventListener("input", ev => {
+  const el = ev.target;
+  if (el.dataset.ex && el.dataset.k && S.draft) {
+    const en = S.draft.entries[el.dataset.ex] || (S.draft.entries[el.dataset.ex] = { sets: [] });
+    const i = +el.dataset.set; while (en.sets.length <= i) en.sets.push({});
+    en.sets[i][el.dataset.k] = el.value.replace(",", ".").replace(/[^\d.]/g, "");
+    persist(); return;
+  }
+  if (S.draft && el.dataset.k === "note") { S.draft.note = el.value; persist(); return; }
+  if (S.draft && el.dataset.k === "week") { const n = parseInt(el.value, 10); if (n > 0) { S.draft.week = n; persist(); } return; }
+  if (el.dataset.edit != null && UI.editKey) { const s = sess(UI.editKey); const e = s.exercises[+el.dataset.edit]; const f = el.dataset.f;
+    e[f] = f === "sets" ? (numParse(el.value) ?? 0) : el.value;
+    if (f === "name") { const lib = P().library[norm(el.value)]; e.video = lib ? lib.url : e.video; }
+    persist(); return; }
+  if (el.dataset.sess && UI.editKey) { sess(UI.editKey)[el.dataset.sess] = el.value; persist(); return; }
+  if (el.dataset.coach === "rotation") { const keys = P().sessions.map(s => s.key); const r = el.value.toUpperCase().split(/[^A-Z0-9]+/).filter(k => keys.includes(k)); if (r.length) { P().rotation = r; S.rotPos = 0; persist(); } return; }
+});
+document.addEventListener("change", ev => {
+  const el = ev.target;
+  if (S.draft && el.dataset.k === "date" && el.value) { S.draft.date = el.value; S.draft.week = weekOf(el.value); persist(); UI.keepScroll = true; render(); return; }
+  if (el.dataset.plan === "cycleStart") { S.cycleStart = el.value || null; persist(); UI.keepScroll = true; render(); return; }
+  if (el.dataset.plan === "weeks") { const n = parseInt(el.value, 10); if (n > 0) { P().weeks = n; persist(); } return; }
+  if (el.dataset.plan === "newCycle") { UI.importNewCycle = el.checked; return; }
+  if (el.id === "file" && el.files[0]) handleFile(el.files[0]);
+  if (el.id === "backupFile" && el.files[0]) restoreBackup(el.files[0]);
+});
+document.addEventListener("keydown", ev => { // Enter jumps to next set field
+  const el = ev.target; if (ev.key !== "Enter" || !el.dataset || !el.dataset.ex) return;
+  ev.preventDefault(); const all = [...document.querySelectorAll("input[data-ex]")]; const n = all[all.indexOf(el) + 1]; if (n) n.focus(); else el.blur();
+});
+async function restoreBackup(file){
+  try { const data = JSON.parse(await file.text()); if (data.app !== "serie-valida" || !data.state) throw new Error("arquivo não é um backup do app");
+    S = Object.assign(blankState(), data.state); if (data.template) await saveTemplate(data.template); S.logs.forEach(l => dirtyLogs.add(l.id)); persist(); go(() => { UI.tab = "hoje"; }); toast("Backup restaurado"); }
+  catch(e){ toast("Não consegui restaurar: " + (e.message || e)); }
+}
+
+/* ---------- rest timer ---------- */
+let T = null, tick = null, audioCtx = null;
+function beep(){ try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); [0, .25, .5].forEach(o => { const os = audioCtx.createOscillator(), g = audioCtx.createGain(); os.frequency.value = 880; g.gain.setValueAtTime(.0001, audioCtx.currentTime + o); g.gain.exponentialRampToValueAtTime(.3, audioCtx.currentTime + o + .02); g.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime + o + .18); os.connect(g).connect(audioCtx.destination); os.start(audioCtx.currentTime + o); os.stop(audioCtx.currentTime + o + .2); }); } catch(e){} try { navigator.vibrate && navigator.vibrate([200,100,200]); } catch(e){} }
+function startTimer(secs, label){
+  try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); audioCtx.resume && audioCtx.resume(); } catch(e){}
+  T = { end: Date.now() + secs*1000, total: secs, label, beeped: false }; drawTimer(); clearInterval(tick); tick = setInterval(drawTimer, 250);
+}
+function stopTimer(){ T = null; clearInterval(tick); const el = $("#timer"); el.hidden = true; el.innerHTML = ""; }
+function drawTimer(){
+  const el = $("#timer"); if (!T) return stopTimer();
+  const left = Math.round((T.end - Date.now())/1000); const over = left <= 0;
+  if (over && !T.beeped) { T.beeped = true; beep(); }
+  const a = Math.abs(left); const txt = (over ? "+" : "") + Math.floor(a/60) + ":" + pad(a%60);
+  el.hidden = false; el.className = "timer" + (over ? " over" : "");
+  if (!el.firstChild) el.innerHTML = `<div class="in" role="timer" aria-label="Descanso"><span class="t num"></span><div class="lab"><div class="lab-t"></div><div class="bar"><i></i></div></div><button data-tact="-15" aria-label="Menos 15 segundos">−15</button><button data-tact="15" aria-label="Mais 15 segundos">+15</button><button data-tact="x" aria-label="Fechar timer">✕</button></div>`;
+  el.querySelector(".t").textContent = txt;
+  el.querySelector(".lab-t").textContent = over ? "Pode ir para a próxima série" : T.label;
+  el.querySelector(".bar i").style.width = Math.max(0, Math.min(100, (1 - Math.max(left,0)/T.total) * 100)) + "%";
+}
+$("#timer").addEventListener("click", ev => { const b = ev.target.closest("[data-tact]"); if (!b || !T) return; const v = b.dataset.tact; if (v === "x") return stopTimer(); T.end += (+v)*1000; if (T.end > Date.now()) T.beeped = false; drawTimer(); });
+
+/* ---------- screen awake during session ---------- */
+let wake = null;
+async function requestWakeLock(){ try { if ("wakeLock" in navigator && !wake) { wake = await navigator.wakeLock.request("screen"); wake.addEventListener("release", () => { wake = null; }); } } catch(e){ wake = null; } }
+function releaseWakeLock(){ try { wake && wake.release(); } catch(e){} wake = null; }
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && UI.view === "runner") requestWakeLock(); if (document.visibilityState === "hidden") flush(); });
+
+/* ============================================================
+   Boot
+   ============================================================ */
+async function boot(){
+  S = Object.assign(blankState(), (await local.get("state")) || {});
+  TEMPLATE = await local.get("template");
+  if (!S.program && window.SV_SEED) { try { await importBuffer(b64ToBuf(window.SV_SEED.b64), window.SV_SEED.name); } catch(e){ console.warn("seed failed", e); } }
+  if (S.draft) UI.view = "runner";
+  render();
+  if (await initRemote()) {
+    const changed = await pullRemote();
+    if (!S.program && window.SV_SEED) { try { await importBuffer(b64ToBuf(window.SV_SEED.b64), window.SV_SEED.name); } catch(e){} }
+    if (changed && !document.activeElement?.matches("input,textarea")) { if (S.draft && !UI.view) UI.view = "runner"; render(); }
+  }
+  if ("serviceWorker" in navigator && !window.claude && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+window.SV = { parseWorkbook, buildWorkbook, get state(){ return S; } }; // for tests
+boot();
+})();
+</script>
