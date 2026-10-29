@@ -4,8 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Série Válida</title>
-<meta name="description" content="App de treino: planilha do treinador vira sessões no celular, registre carga e reps, timer de descanso.">
+<meta name="description" content="App de treino e dieta: planilha do treinador e PDFs da nutri no celular.">
 <meta name="theme-color" content="#5B3FD1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Série Válida">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -37,6 +39,7 @@
 html,body{background:var(--bg);margin:0}
 img{max-width:100%}
 [hidden]{display:none!important}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 body{color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45;-webkit-text-size-adjust:100%;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
   padding-block:0 calc(84px + env(safe-area-inset-bottom,0px))}
@@ -189,6 +192,57 @@ dd{margin:0;color:var(--muted)}
 .days{display:flex;gap:4px;flex-wrap:wrap}
 .days button{width:40px;height:36px;border-radius:9px;border:1px solid var(--line);background:var(--surface);font-weight:600;font-size:.85rem}
 .days button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+/* dieta */
+.tabs .in{grid-template-columns:repeat(5,1fr)}
+.tab{font-size:.7rem}
+.accent-t{color:var(--accent);font-weight:600}
+.top .icon-btn{font-size:1.9rem;line-height:1;color:var(--accent)}
+.top .icon-btn:disabled{color:var(--line)}
+.bar.big{height:8px;border-radius:4px;background:var(--line)}
+.bar.big i{background:var(--good);border-radius:4px}
+.week.dots .day{border:1px solid transparent;cursor:pointer}
+.week.dots .day.sel{border-color:var(--ink);background:var(--surface)}
+.week.dots .day b.full{color:var(--good)}
+.meter{width:70%;height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--good)}
+.water{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.wseg{display:flex;gap:4px}
+.wseg i{flex:1;height:14px;border-radius:4px;background:var(--fill);border:1px solid var(--fill-line)}
+.wseg i.on{background:#3E8ED0;border-color:#3E8ED0}
+.wseg i.half{background:linear-gradient(90deg,#3E8ED0 50%,var(--fill) 50%)}
+.meal{display:flex;flex-direction:column;gap:10px}
+.meal.next{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.meal.done{background:var(--bg)}
+.meal.done h3{color:var(--muted)}
+.meal-head{display:flex;gap:12px;align-items:center}
+.meal-head .grow{flex:1;min-width:0}
+.tick{flex:none;width:44px;height:44px;border-radius:50%;border:2px solid var(--fill-line);background:var(--fill);color:transparent;display:grid;place-items:center}
+.tick[aria-pressed="true"]{background:var(--good);border-color:var(--good);color:#fff}
+.tick[aria-pressed="false"]:hover{color:var(--fill-line)}
+.foods{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.food{display:flex;align-items:stretch;border-top:1px solid var(--line)}
+.food-check{flex:1;min-width:0;display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:10px;align-items:center;text-align:left;border:0;background:transparent;padding:10px 0;min-height:48px}
+.food-check .box{width:22px;height:22px;border-radius:7px;border:2px solid var(--fill-line);background:var(--fill)}
+.food.on .box{background:var(--accent);border-color:var(--accent);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-size:16px;background-position:center;background-repeat:no-repeat}
+.food.on .fname{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--fill-line)}
+.fname{min-width:0;line-height:1.25}
+.fname small,.fqty small,.eqv small{display:block;font-size:.75rem;color:var(--muted);text-decoration:none}
+.fname small{color:var(--accent)}
+.fqty{text-align:right;font-weight:600;font-size:.9rem;line-height:1.2;max-width:9.5em}
+.swap{flex:none;border:0;background:transparent;color:var(--accent);font-weight:600;font-size:.8rem;padding:0 0 0 10px;min-width:56px}
+.obs{line-height:1.5}
+.opts{align-self:flex-start;max-width:100%;overflow-x:auto}
+.reorder{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.reorder li{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.reorder li:last-child{border-bottom:0}
+.reorder .grow{flex:1;min-width:0}
+.eqlist{display:flex;flex-direction:column}
+.eqrow{display:flex;gap:12px;align-items:center;justify-content:space-between;text-align:left;border:0;border-top:1px solid var(--line);background:transparent;padding:11px 0;min-height:46px;width:100%}
+.eqrow:first-child{border-top:0}
+.eqrow .grow{flex:1;min-width:0}
+.eqv{font-weight:700;text-align:right;white-space:nowrap}
+.eqrow.static .eqv{font-weight:500;white-space:normal}
+.hint.warn-b{background:var(--warn-bg);color:var(--warn)}
 @media (max-width:440px){.grid3{grid-template-columns:1fr 1fr}}
 @media (max-width:380px){.set,.set-head{grid-template-columns:minmax(0,1fr) 84px 66px}}
 @media (prefers-reduced-motion:no-preference){.btn,.chk,.tab{transition:background-color .15s,color .15s}}
@@ -202,10 +256,191 @@ dd{margin:0;color:var(--muted)}
 <nav class="tabs" id="tabs" aria-label="Seções"></nav>
 <input type="file" id="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
 <input type="file" id="backupFile" accept=".json,application/json" hidden>
+<input type="file" id="dietFile" accept="application/pdf,.pdf" multiple hidden>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-</body>
-</html>
+<script>
+/* Série Válida — leitura dos PDFs da nutricionista (plano alimentar + tabela de conversões).
+   Funciona no navegador (pdf.js) e no Node (testes). Exporta via globalThis.SVDiet. */
+(function (G) {
+  "use strict";
+  const norm = s => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
+  const fixLig = s => String(s).replace(/ﬁ/g, "fi").replace(/ﬂ/g, "fl").replace(/ﬀ/g, "ff");
+
+  /* ---------- PDF -> linhas de células ---------- */
+  async function pdfLines(doc) {
+    const out = [];
+    for (let p = 1; p <= doc.numPages; p++) {
+      const page = await doc.getPage(p);
+      const tc = await page.getTextContent();
+      const items = tc.items.filter(it => it.str && it.str.trim()).map(it => ({
+        s: fixLig(it.str), x: it.transform[4], y: it.transform[5], w: it.width, h: Math.abs(it.transform[3]) || it.height || 10
+      }));
+      items.sort((a, b) => b.y - a.y || a.x - b.x);
+      const lines = [];
+      for (const it of items) {
+        const L = lines.find(l => Math.abs(l.y - it.y) <= Math.max(2.5, it.h * 0.35));
+        if (L) L.items.push(it); else lines.push({ y: it.y, items: [it], page: p });
+      }
+      lines.sort((a, b) => b.y - a.y);
+      for (const L of lines) {
+        L.items.sort((a, b) => a.x - b.x);
+        const cells = [];
+        for (const it of L.items) {
+          const c = cells[cells.length - 1];
+          const gap = c ? it.x - (c.x + c.w) : Infinity;
+          if (c && gap < it.h * 0.9) { c.s += (gap > it.h * 0.12 && !/\s$/.test(c.s) && !/^\s/.test(it.s) ? " " : "") + it.s; c.w = it.x + it.w - c.x; }
+          else cells.push({ s: it.s, x: it.x, w: it.w, h: it.h });
+        }
+        cells.forEach(c => { c.s = c.s.replace(/\s+/g, " ").trim(); });
+        const cl = cells.filter(c => c.s);
+        if (cl.length) out.push({ page: p, y: L.y, cells: cl, text: cl.map(c => c.s).join(" ") });
+      }
+    }
+    return out;
+  }
+
+  /* ---------- quantidades ---------- */
+  function parseQty(q) {
+    const s = String(q || "").trim();
+    let m = /\((\d+(?:[.,]\d+)?)\s*(g|ml)\)/i.exec(s);
+    const house = s.replace(/\s*\(\d+(?:[.,]\d+)?\s*(g|ml)\)\s*$/i, "").trim();
+    if (m) return { amount: parseFloat(m[1].replace(",", ".")), unit: m[2].toLowerCase(), house: house !== s ? house : "", raw: s };
+    m = /^(\d+(?:[.,]\d+)?)\s*(g|ml|l|kg)$/i.exec(s.replace(/\s+/g, ""));
+    if (m) { let a = parseFloat(m[1].replace(",", ".")), u = m[2].toLowerCase(); if (u === "kg") { a *= 1000; u = "g"; } if (u === "l") { a *= 1000; u = "ml"; } return { amount: a, unit: u, house: "", raw: s }; }
+    m = /^(\d+(?:[.,]\d+)?)\s*(.*)$/.exec(s);
+    if (m) return { amount: null, unit: "", house: s, count: parseFloat(m[1].replace(",", ".")), raw: s };
+    return { amount: null, unit: "", house: s, raw: s };
+  }
+  const QTY_RE = /^(\d+(?:[.,]\d+)?\s*(g|ml)|\d+(?:[.,]\d+)?\s+[A-Za-zÀ-ú].*\(\d+(?:[.,]\d+)?\s*(g|ml)\))$/i;
+
+  /* ---------- plano alimentar ---------- */
+  function isPlan(lines) { return lines.some(l => /planejamento alimentar/i.test(l.text)); }
+  function parsePlan(lines) {
+    const meals = []; let title = ""; let cur = null; let mode = "items"; let subFor = null;
+    let guidance = []; let goals = []; let inGuide = false, inGoals = false;
+    const isHeader = l => l.cells.length === 1 && l.cells[0].x > 120 && !QTY_RE.test(l.cells[0].s) && !/^observa/i.test(l.text) && !/^[•·]/.test(l.text) && l.cells[0].s.length < 48 && !/https?:/.test(l.text);
+    for (let i = 0; i < lines.length; i++) {
+      const l = lines[i]; const t = l.text;
+      if (/planejamento alimentar/i.test(t)) { if (!title && i > 0) title = lines[i - 1].text; continue; }
+      if (!title && i === 0 && lines[1] && /planejamento alimentar/i.test(lines[1].text)) continue;
+      if (/^orientacao nutricional$/.test(norm(t))) { inGuide = true; cur = null; continue; }
+      if (inGuide) {
+        if (/^metas$/i.test(norm(t))) { inGoals = true; continue; }
+        if (inGoals) goals.push(t); else guidance.push(t);
+        continue;
+      }
+      const two = l.cells.length >= 2 && QTY_RE.test(l.cells[l.cells.length - 1].s);
+      if (two && cur) {
+        const name = l.cells.slice(0, -1).map(c => c.s).join(" ");
+        cur.items.push({ name, qty: l.cells[l.cells.length - 1].s, ...parseQty(l.cells[l.cells.length - 1].s) });
+        mode = "items"; continue;
+      }
+      let m;
+      if ((m = /^[•·]\s*op[cç][oõ]es de substitui[cç][aã]o para\s+(.+?):?$/i.exec(t)) && cur) { subFor = m[1].trim(); mode = "subs"; continue; }
+      if (mode === "subs" && cur && (m = /^(.+?)\s+-\s+(.+)$/.exec(t))) {
+        const it = cur.items.find(x => norm(x.name) === norm(subFor)) || cur.items[cur.items.length - 1];
+        (it.subs = it.subs || []).push({ name: m[1].trim(), qty: m[2].trim(), ...parseQty(m[2].trim()) });
+        continue;
+      }
+      if (/^observa[cç][oõ]es:?$/i.test(t.trim()) && cur) { mode = "obs"; continue; }
+      if (isHeader(l)) { cur = { name: t.trim(), items: [], obs: [] }; meals.push(cur); mode = "items"; continue; }
+      if (cur && mode === "obs") { cur.obs.push(t); continue; }
+      if (cur && mode === "items" && !two) { cur.obs.push(t); }
+    }
+    // jantar (opção…) vira opção da refeição anterior com o mesmo nome base
+    const merged = [];
+    for (const m of meals) {
+      const base = norm(m.name).replace(/\s*\(.*$/, "");
+      const isOpt = /\(op[cç][aã]o/i.test(m.name);
+      const prev = merged.find(x => norm(x.name) === base);
+      const opt = { label: isOpt ? (m.name.replace(/^.*?\(/, "").replace(/\)\s*$/, "").replace(/^op[cç][aã]o\s*/i, "").trim() || "Opção") : "Principal", items: m.items, obs: m.obs };
+      if (isOpt && prev) { opt.label = opt.label.replace(/^./, c => c.toUpperCase()); if (opt.label === "Opção" || !opt.label) opt.label = "Opção " + (prev.options.length + 1); prev.options.push(opt); }
+      else merged.push({ name: m.name.replace(/\s*\(.*$/, "").trim(), options: [opt] });
+    }
+    const water = (() => { const g = goals.join(" "); const mm = /(\d+(?:[.,]\d+)?)\s*l\s+de\s+[aá]gua/i.exec(g) || /(\d+(?:[.,]\d+)?)\s*(?:litros?|l)\b/i.exec(g); return mm ? Math.round(parseFloat(mm[1].replace(",", ".")) * 1000) : null; })();
+    return { title: title.trim(), meals: merged, guidance: guidance.join("\n").replace(/\n(?=[a-zà-ú(])/g, " ").trim(), goals: joinGoals(goals), waterGoal: water };
+  }
+  function joinGoals(lines) { const out = []; for (const l of lines) { if (out.length && /^[a-zà-ú(]/.test(l.trim())) out[out.length - 1] += " " + l.trim(); else out.push(l.trim()); } return out; }
+
+  /* ---------- tabela de conversões ---------- */
+  const VAL_RE = /^(\d+(?:[.,]\d+)?\s*(g|ml|l)|\d+\s*unid|\d+\s*ovos?\s*\+\s*\d+\s*claras?|1l)$/i;
+  const fixO = s => s.replace(/(\d)O(G|ML)\b/gi, "$10$2").replace(/\b6OG\b/gi, "60G");
+  function isConversion(lines) { return lines.some(l => /convers[aã]o/i.test(l.text)) && lines.filter(l => l.cells.length === 5).length > 20; }
+  function parseConversion(lines) {
+    const groups = []; let g = null; let lastCat = "";
+    const CATS = ["proteinas", "frutas", "carboidratos", "gorduras"];
+    for (const l of lines) {
+      const n = norm(l.text);
+      const cat = CATS.find(c => n.includes(c) && l.cells.length <= 3);
+      if (cat) { lastCat = { proteinas: "Proteínas", frutas: "Frutas", carboidratos: "Carboidratos", gorduras: "Gorduras" }[cat]; }
+      if (l.cells.length !== 5) continue;
+      const vals = l.cells.slice(1).map(c => fixO(c.s));
+      if (!vals.every(v => VAL_RE.test(v.replace(/\s+/g, " ")))) continue;
+      const name = title(l.cells[0].s);
+      const isRef = vals.every(v => /^\d+\s*(g|unid)$/i.test(v)) && (/^50g$/i.test(vals[0]) || /^1\s*unid$/i.test(vals[0])) && !/^50g$/i.test(name) ;
+      const header = isRef && (!g || g.page !== l.page || g.closed);
+      if (header) {
+        const same = groups.find(x => norm(x.ref.name) === norm(name) && x.cat === lastCat);
+        if (same) { g = same; g.page = l.page; continue; }
+        g = { cat: lastCat || "Outros", ref: { name, vals }, foods: [], page: l.page }; groups.push(g); continue;
+      }
+      if (g) g.foods.push({ name, vals });
+    }
+    groups.forEach(x => { delete x.page; });
+    return { groups };
+  }
+  function title(s) {
+    const small = new Set(["de", "da", "do", "em", "e", "com", "sem"]);
+    const t = norm(s) === s.toLowerCase() ? s : s;
+    return String(t).toLowerCase().split(" ").map((w, i) => (i && small.has(w)) ? w : w.replace(/^./, c => c.toUpperCase())).join(" ").replace(/\(([a-z])/g, (m, c) => "(" + c.toUpperCase());
+  }
+
+  /* ---------- equivalências ---------- */
+  const STOP = new Set(["de", "da", "do", "das", "dos", "e", "com", "sem", "em", "no", "na", "a", "o"]);
+  const toks = s => norm(s).replace(/[^a-z0-9 ]/g, " ").split(" ").filter(w => w && !STOP.has(w)).map(w => w.replace(/s$/, ""));
+  function valAmount(v) { const m = /^(\d+(?:[.,]\d+)?)\s*(g|ml|unid)$/i.exec(String(v).replace(/\s+/g, " ").trim()); if (m) return { a: parseFloat(m[1].replace(",", ".")), u: m[2].toLowerCase() }; if (/^1l$/i.test(String(v).trim())) return { a: 1000, u: "ml" }; return null; }
+  function findFood(conv, name) {
+    if (!conv) return null;
+    const it = toks(name); let best = null;
+    for (const g of conv.groups) {
+      for (const f of [{ ...g.ref, isRef: true }, ...g.foods]) {
+        const ft = toks(f.name); if (!ft.length) continue;
+        const hit = ft.filter(w => it.includes(w)).length;
+        const all = hit === ft.length;
+        const score = all ? 10 + ft.length : (hit && ft[0] === it[0] ? 5 + hit / ft.length : 0);
+        if (score && (!best || score > best.score)) best = { score, group: g, food: f, partial: !all };
+      }
+    }
+    return best;
+  }
+  /* devolve as equivalências da tabela para uma porção (amount na unidade do alimento) */
+  function equivalents(conv, name, amount, unit) {
+    const hit = findFood(conv, name); if (!hit) return null;
+    const g = hit.group; const refCols = g.ref.vals.map(valAmount);
+    const src = hit.food.vals.map(valAmount);
+    let refEq = null; // porção equivalente, na unidade da referência
+    if (!hit.partial && amount != null && src.every(Boolean) && refCols.every(Boolean)) {
+      const r = src[3].a / refCols[3].a; // unidades do alimento por unidade da referência (última coluna: menos arredondamento)
+      refEq = amount / r;
+    }
+    const rows = [{ ...g.ref, isRef: true }, ...g.foods].map(f => {
+      const fv = f.vals.map(valAmount);
+      let calc = null, approx = false;
+      if (refEq != null) {
+        if (fv.every(Boolean)) { const r = fv[3].a / refCols[3].a; calc = { a: round(refEq * r, fv[0].u), u: fv[0].u }; }
+        else { const k = Math.max(0, Math.min(3, Math.round(refEq / refCols[0].a) - 1)); calc = { text: f.vals[k] }; approx = Math.abs(refEq / refCols[0].a - (k + 1)) > 0.25; }
+      }
+      return { name: f.name, vals: f.vals, calc, approx, isSelf: f === hit.food || (f.isRef && hit.food.isRef), isRef: !!f.isRef };
+    });
+    return { group: g, cat: g.cat, refName: g.ref.name, refCols: g.ref.vals, refEq, refUnit: refCols[0] && refCols[0].u, match: hit.food.name, partial: hit.partial, rows };
+  }
+  function round(a, u) { if (u === "unid") return Math.round(a * 10) / 10; if (a >= 100) return Math.round(a / 5) * 5; if (a >= 20) return Math.round(a); return Math.round(a * 2) / 2; }
+
+  G.SVDiet = { pdfLines, isPlan, parsePlan, isConversion, parseConversion, equivalents, findFood, parseQty, norm };
+})(typeof window !== "undefined" ? window : globalThis);
+
+</script>
 <script>
 /* ============================================================
    Série Válida — app de treino local-first
@@ -214,7 +449,7 @@ dd{margin:0;color:var(--muted)}
    ============================================================ */
 (function(){
 "use strict";
-const APP_VERSION = "0.1.0";
+const APP_VERSION = "0.2.0";
 const NS_MAIN = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
 const NS_R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
 const NS_PKG = "http://schemas.openxmlformats.org/package/2006/relationships";
@@ -266,7 +501,7 @@ const UI = { tab: "hoje", view: null, histMode: "sessoes", editKey: null, confir
 const dirtyLogs = new Set(), deletedLogs = new Set();
 let saveTimer = null;
 
-function blankState(){ return { v:1, updatedAt:0, program:null, logs:[], draft:null, cycleStart:null, rotPos:0, coachMode:false }; }
+function blankState(){ return { v:1, updatedAt:0, program:null, logs:[], draft:null, cycleStart:null, rotPos:0, coachMode:false, diet:null, dietDays:{} }; }
 function persist(logId){
   S.updatedAt = Date.now();
   if (logId) dirtyLogs.add(logId);
@@ -651,12 +886,13 @@ const ICONS = {
   treinos: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6.5 7v10M17.5 7v10M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/></svg>',
   historico: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19V5M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/></svg>',
   plano: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-10A.5.5 0 0 1 7 20z" transform="translate(-1 0)"/><path d="M13 3.5V8h4M9 12h6M9 15.5h6"/></svg>',
+  dieta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="13" cy="12" r="6.5"/><circle cx="13" cy="12" r="3.2"/><path d="M4 3.5v6.5M2.5 3.5v4.2a1.5 1.5 0 0 0 3 0V3.5M4 10v10.5M21.5 3.5c-1.4.8-2 2.6-2 4.8v3.2h2v9"/></svg>',
   back: '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>',
   play: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
   clock: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg>'
 };
 function renderTabs(){
-  const tabs = [["hoje","Hoje"],["treinos","Treinos"],["historico","Histórico"],["plano","Plano"]];
+  const tabs = [["hoje","Hoje"],["treinos","Treinos"],["dieta","Dieta"],["historico","Histórico"],["plano","Plano"]];
   $("#tabs").hidden = !!UI.view;
   $("#tabs").innerHTML = `<div class="in">${tabs.map(([k,l]) => `<button class="tab" data-act="tab" data-tab="${k}" ${UI.tab===k&&!UI.view?'aria-current="page"':''}>${ICONS[k]}<span>${l}</span></button>`).join("")}</div>`;
 }
@@ -669,6 +905,7 @@ function viewOnboarding(){
       <p class="muted">Importe o arquivo .xlsx que o treinador enviou. O app lê as abas de treino, monta as sessões, a agenda da semana e os links dos vídeos.</p>
       <div class="drop"><button class="btn primary" data-act="pick-file">Importar planilha (.xlsx)</button><span class="small muted">No iPhone: o arquivo pode estar em Arquivos › Downloads ou no WhatsApp › Documentos.</span></div>
     </div>
+    <div class="card spread"><div><span class="label">Dieta</span><p>Tem o plano alimentar da nutri em PDF?</p></div><button class="btn sm" data-act="tab" data-tab="dieta">Abrir dieta</button></div>
     <div class="card flat stack small">
       <span class="label">Como funciona</span>
       <p>1. O treinador manda a planilha. 2. Você treina e registra a carga de cada série válida. 3. No fim do ciclo, ou quando quiser, você devolve a mesma planilha preenchida nas colunas Sem 1 a Sem 8.</p>
@@ -705,6 +942,7 @@ function viewToday(){
   return header(first ? "Olá, " + first : "Hoje", `Semana ${wk}${p.weeks ? " de " + p.weeks : ""} · ${fmtDate(t)}`) + `<main>
     <div class="card flat stack"><div class="spread"><span class="label">Esta semana</span><span class="small muted num">${weekLogs} de ${p.rotation.length} treinos</span></div>${weekStrip()}</div>
     ${heroHtml}
+    ${viewTodayMeal()}
     <section class="stack"><span class="label">Escolher outro treino</span><div class="choices">${others}</div></section>
   </main>`;
 }
@@ -881,16 +1119,221 @@ function render(){
   const app = $("#app");
   const sy = window.scrollY;
   let html;
-  if (!S.program) { html = viewOnboarding(); UI.view = null; }
+  if (UI.view === "swap" && DP()) html = viewSwap();
+  else if (!S.program && UI.tab === "dieta") { UI.view = null; html = viewDieta(); }
+  else if (!S.program) { html = viewOnboarding(); UI.view = null; }
   else if (UI.view === "runner" && S.draft) html = viewRunner();
   else if (UI.view === "done") html = viewDone();
   else if (UI.view === "log") html = viewLog();
-  else { UI.view = null; html = ({ hoje: viewToday, treinos: viewTreinos, historico: viewHistorico, plano: viewPlano }[UI.tab] || viewToday)(); }
+  else { UI.view = null; html = ({ hoje: viewToday, treinos: viewTreinos, dieta: viewDieta, historico: viewHistorico, plano: viewPlano }[UI.tab] || viewToday)(); }
   app.innerHTML = html;
-  renderTabs(); $("#tabs").hidden = !S.program || !!UI.view;
+  renderTabs(); $("#tabs").hidden = (!S.program && !DP() && UI.tab !== "dieta") || !!UI.view;
   if (UI.keepScroll) window.scrollTo(0, sy); UI.keepScroll = false;
 }
 function go(fn){ UI.copyText = null; UI.confirm = null; fn(); render(); window.scrollTo(0, 0); }
+
+/* ============================================================
+   Dieta — plano da nutri, marcar refeições, reordenar o dia, trocas pela tabela
+   ============================================================ */
+const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+function loadScript(src){ return new Promise((res, rej) => { if ([...document.scripts].some(s => s.src === src && s.dataset.ok)) return res(); const s = document.createElement("script"); s.src = src; s.onload = () => { s.dataset.ok = "1"; res(); }; s.onerror = () => rej(new Error("não consegui carregar o leitor de PDF. Confira a internet e tente de novo.")); document.head.appendChild(s); }); }
+async function getPdfjs(){ if (!window.pdfjsLib) await loadScript(PDFJS + "pdf.min.js"); if (!window.pdfjsWorker) await loadScript(PDFJS + "pdf.worker.min.js"); return window.pdfjsLib; }
+const D = () => S.diet || null;
+const DP = () => (S.diet && S.diet.plan) || null;
+const mealKey = m => norm(m.name);
+const dietDate = () => UI.dietDate || todayStr();
+function dayRO(date){ return (S.dietDays && S.dietDays[date]) || { order: null, done: {}, items: {}, opt: {}, swaps: {}, water: 0 }; }
+function dayRW(date){ S.dietDays = S.dietDays || {}; return S.dietDays[date] || (S.dietDays[date] = { order: null, done: {}, items: {}, opt: {}, swaps: {}, water: 0 }); }
+function mealOrder(date){
+  const plan = DP(); if (!plan) return [];
+  const keys = plan.meals.map(mealKey);
+  const base = dayRO(date).order || (D().order && D().order.length ? D().order : keys);
+  const out = base.filter(k => keys.includes(k)); keys.forEach(k => { if (!out.includes(k)) out.push(k); });
+  return out;
+}
+const mealBy = k => DP().meals.find(m => mealKey(m) === k);
+const itemKey = (k, o, i) => k + "|" + o + "|" + i;
+function chosenOpt(date, k){ const m = mealBy(k); const o = dayRO(date).opt[k] ?? 0; return Math.min(o, m.options.length - 1); }
+function itemView(date, k, o, i){ const it = mealBy(k).options[o].items[i]; const sw = dayRO(date).swaps[itemKey(k, o, i)]; return sw ? Object.assign({}, sw, { orig: it, swapped: true }) : Object.assign({}, it, { orig: it, swapped: false }); }
+function mealProgress(date, k){ const o = chosenOpt(date, k); const items = mealBy(k).options[o].items; const d = dayRO(date); const n = items.filter((_, i) => d.items[itemKey(k, o, i)]).length; return { n, total: items.length, o }; }
+function dayStats(date){ if (!DP()) return { done: 0, total: 0 }; const d = dayRO(date); const ks = DP().meals.map(mealKey); return { done: ks.filter(k => d.done[k]).length, total: ks.length }; }
+function nextMeal(date){ const d = dayRO(date); return mealOrder(date).find(k => !d.done[k]) || null; }
+const fmtAmt = (a, u) => (u === "unid" ? String(a).replace(".", ",") + (a === 1 ? " unid." : " unid.") : String(a).replace(".", ",") + " " + (u || "g"));
+const qtyLabel = it => it.house ? it.house.replace(/\((es|s)\)/g, "$1").replace(/(\d)\.(\d)/, "$1,$2") : (it.amount != null ? fmtAmt(it.amount, it.unit) : (it.qty || ""));
+function linkify(t){ return esc(t).replace(/https?:\/\/[^\s<]+/g, u => `<a href="${u}" target="_blank" rel="noopener">${u.replace(/^https?:\/\/(www\.)?/, "").replace(/\/.*$/, "")} ↗</a>`); }
+const prettyMeal = n => n.replace(/^Pos treino$/i, "Pós-treino");
+
+async function handleDietFiles(files){
+  const msgs = [];
+  try {
+    toast("Lendo " + (files.length > 1 ? files.length + " PDFs…" : "o PDF…"));
+    const lib = await getPdfjs();
+    for (const f of files) {
+      const doc = await lib.getDocument({ data: new Uint8Array(await f.arrayBuffer()), isEvalSupported: false }).promise;
+      const lines = await SVDiet.pdfLines(doc);
+      S.diet = S.diet || {};
+      if (SVDiet.isPlan(lines)) {
+        const plan = SVDiet.parsePlan(lines);
+        if (!plan.meals.length) { msgs.push(`${f.name}: não achei refeições`); continue; }
+        const keys = plan.meals.map(mealKey);
+        const prevOrder = (S.diet.order || []).filter(k => keys.includes(k));
+        S.diet.plan = plan; S.diet.planFile = f.name; S.diet.planAt = Date.now();
+        S.diet.order = prevOrder.concat(keys.filter(k => !prevOrder.includes(k)));
+        msgs.push(`plano com ${plan.meals.length} refeições`);
+      } else if (SVDiet.isConversion(lines)) {
+        const conv = SVDiet.parseConversion(lines);
+        if (!conv.groups.length) { msgs.push(`${f.name}: não achei a tabela`); continue; }
+        S.diet.conv = conv; S.diet.convFile = f.name; S.diet.convAt = Date.now();
+        msgs.push(`tabela com ${conv.groups.reduce((a, g) => a + g.foods.length + 1, 0)} alimentos`);
+      } else msgs.push(`${f.name}: não reconheci este PDF`);
+    }
+    persist(); UI.tab = "dieta"; UI.view = null; render(); window.scrollTo(0, 0);
+    toast("Importado: " + msgs.join(" · "));
+  } catch(e){ console.error(e); toast("Não consegui ler o PDF: " + (e.message || e)); }
+}
+
+function waterBlock(date){
+  const goal = (DP() && DP().waterGoal) || 3000; const ml = dayRO(date).water || 0;
+  const seg = 500, n = Math.ceil(goal / seg);
+  return `<div class="water"><div class="spread"><span class="label">Água</span><span class="num small"><b>${String(Math.round(ml/100)/10).replace(".", ",")}</b> de ${String(goal/1000).replace(".", ",")} L</span></div>
+    <div class="wseg" aria-hidden="true">${Array.from({ length: n }, (_, i) => `<i class="${ml >= (i+1)*seg ? "on" : ml > i*seg ? "half" : ""}"></i>`).join("")}</div>
+    <div class="row"><button class="btn sm" data-act="water" data-ml="250">+250 ml</button><button class="btn sm" data-act="water" data-ml="500">+500 ml</button><button class="btn sm ghost" data-act="water" data-ml="-250" ${ml ? "" : "disabled"} aria-label="Tirar 250 ml">−250</button></div></div>`;
+}
+function weekDots(){
+  const mon = mondayOf(new Date()); const t = todayStr();
+  return `<div class="week dots">${Array.from({ length: 7 }, (_, i) => { const d = new Date(mon); d.setDate(mon.getDate() + i); const ds = ymd(d); const st = dayStats(ds); const pct = st.total ? st.done / st.total : 0;
+    return `<button class="day ${ds === t ? "today" : ""} ${ds === dietDate() ? "sel" : ""}" data-act="diet-goto" data-date="${ds}" aria-label="${DOW_LONG[d.getDay()]}: ${st.done} de ${st.total} refeições"><span>${DOW_SHORT[d.getDay()]}</span><b class="num ${pct === 1 ? "full" : ""}">${ds > t || !st.done ? "·" : st.done}</b><span class="meter"><i style="width:${Math.round(pct*100)}%"></i></span></button>`; }).join("")}</div>`;
+}
+
+function viewDietEmpty(){
+  const has = D() || {};
+  return header("Dieta", "Plano alimentar") + `<main>
+    <div class="card stack"><h2>Traga os PDFs da nutri</h2>
+      <p class="muted">Selecione o plano alimentar e a tabela de conversões. Pode escolher os dois de uma vez. O app separa as refeições, as opções de jantar, as substituições, os suplementos e a meta de água.</p>
+      <div class="drop"><button class="btn primary" data-act="diet-import">Importar PDFs da nutri</button>
+      <span class="small muted">${has.conv ? "✓ Tabela de conversões já importada. Falta o plano alimentar." : "Os PDFs costumam estar em Arquivos › Downloads ou no WhatsApp › Documentos."}</span></div>
+    </div>
+    <div class="card flat stack small"><span class="label">No dia a dia</span><p>Toque no círculo para marcar a refeição inteira, ou em cada alimento. Use Reorganizar para mudar a ordem do dia, por exemplo o pós-treino depois do treino da noite. Em Trocar, a tabela da nutri calcula a quantidade do alimento substituto.</p></div>
+  </main>`;
+}
+function viewDieta(){
+  const plan = DP(); if (!plan) return viewDietEmpty();
+  const date = dietDate(); const t = todayStr(); const d = dayRO(date);
+  const order = mealOrder(date); const st = dayStats(date); const nxt = date === t ? nextMeal(date) : null;
+  const dayLbl = date === t ? "Hoje" : fmtDate(date);
+  const nav = `<div class="row" style="flex-wrap:nowrap"><button class="icon-btn" data-act="diet-day" data-d="-1" aria-label="Dia anterior">‹</button><button class="icon-btn" data-act="diet-day" data-d="1" aria-label="Próximo dia" ${date >= t ? "disabled" : ""}>›</button></div>`;
+  let body;
+  if (UI.dietReorder) {
+    body = `<section class="card stack"><div class="spread"><h3>Ordem das refeições · ${esc(dayLbl.toLowerCase())}</h3><button class="btn sm primary" data-act="diet-reorder">Pronto</button></div>
+      <ol class="reorder">${order.map((k, i) => { const m = mealBy(k); return `<li><span class="badge soft num">${i+1}</span><span class="grow"><b>${esc(prettyMeal(m.name))}</b>${d.done[k] ? ' <span class="pill good">feita</span>' : ""}</span>
+        <button class="icon-btn" data-act="meal-move" data-k="${esc(k)}" data-d="-1" ${i ? "" : "disabled"} aria-label="Subir ${esc(m.name)}">↑</button><button class="icon-btn" data-act="meal-move" data-k="${esc(k)}" data-d="1" ${i < order.length-1 ? "" : "disabled"} aria-label="Descer ${esc(m.name)}">↓</button></li>`; }).join("")}</ol>
+      <div class="row"><button class="btn sm" data-act="order-default">Usar esta ordem todo dia</button><button class="btn sm ghost" data-act="order-reset">Voltar à ordem do plano</button></div>
+      <p class="small muted">A mudança vale para ${esc(dayLbl.toLowerCase())}. “Usar esta ordem todo dia” guarda como padrão para os próximos dias.</p></section>`;
+  } else {
+    body = order.map(k => {
+      const m = mealBy(k); const pr = mealProgress(date, k); const done = !!d.done[k]; const o = pr.o; const opt = m.options[o];
+      const optSeg = m.options.length > 1 ? `<div class="seg opts" role="group" aria-label="Opção de ${esc(m.name)}">${m.options.map((op, oi) => `<button data-act="meal-opt" data-k="${esc(k)}" data-o="${oi}" aria-pressed="${oi === o}">${esc(oi === 0 && op.label === "Principal" ? "Opção 1" : op.label)}</button>`).join("")}</div>` : "";
+      const foods = opt.items.map((_, i) => { const it = itemView(date, k, o, i); const on = !!d.items[itemKey(k, o, i)];
+        return `<li class="food ${on ? "on" : ""}"><button class="food-check" data-act="food" data-k="${esc(k)}" data-o="${o}" data-i="${i}" aria-pressed="${on}"><span class="box" aria-hidden="true"></span><span class="fname">${esc(it.name)}${it.swapped ? `<small>no lugar de ${esc(it.orig.name)}</small>` : ""}</span><span class="fqty num">${esc(qtyLabel(it))}${it.house && it.amount != null ? `<small>${esc(fmtAmt(it.amount, it.unit))}</small>` : ""}</span></button><button class="swap" data-act="swap-open" data-k="${esc(k)}" data-o="${o}" data-i="${i}" aria-label="Trocar ${esc(it.name)}">Trocar</button></li>`; }).join("");
+      const obs = opt.obs.filter(x => x.trim());
+      const when = done ? `Feita às ${new Date(d.done[k]).toTimeString().slice(0,5)}` : (k === nxt ? "Próxima" : `${pr.n} de ${pr.total} alimentos`);
+      return `<article class="card meal ${done ? "done" : ""} ${k === nxt ? "next" : ""}" id="meal-${esc(k.replace(/[^a-z0-9]/g, "-"))}">
+        <div class="meal-head"><button class="tick" data-act="meal-done" data-k="${esc(k)}" aria-pressed="${done}" aria-label="${done ? "Desmarcar" : "Marcar"} ${esc(m.name)}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+          <div class="grow"><h3>${esc(prettyMeal(m.name))}</h3><p class="small ${k === nxt && !done ? "accent-t" : "muted"}">${esc(when)}</p></div><span class="pill num">${pr.n}/${pr.total}</span></div>
+        ${optSeg}<ul class="foods">${foods}</ul>
+        ${obs.length ? `<div class="ex-notes small obs">${obs.map(linkify).join("<br>")}</div>` : ""}
+      </article>`;
+    }).join("");
+  }
+  const guide = (plan.goals.length || plan.guidance) ? `<details><summary>Metas e orientações da nutri</summary><div class="stack small">${plan.goals.length ? `<ul style="margin:0;padding-left:18px">${plan.goals.map(g => `<li>${esc(g)}</li>`).join("")}</ul>` : ""}${plan.guidance ? `<p class="muted" style="white-space:pre-line">${linkify(plan.guidance)}</p>` : ""}</div></details>` : "";
+  return header("Dieta", `${plan.title || "Plano alimentar"} · ${dayLbl}`, nav) + `<main>
+    <section class="card stack">
+      <div class="spread"><span class="label">${esc(dayLbl)}</span><span class="small muted num">${st.done} de ${st.total} refeições</span></div>
+      <div class="bar big" aria-hidden="true"><i style="width:${st.total ? Math.round(st.done/st.total*100) : 0}%"></i></div>
+      ${weekDots()}
+      ${waterBlock(date)}
+    </section>
+    ${UI.dietReorder ? "" : `<div class="spread"><span class="label">Refeições na ordem do dia</span><button class="btn sm" data-act="diet-reorder">Reorganizar</button></div>`}
+    ${body}
+    <section class="card flat stack small">${guide}
+      <details><summary>Arquivos da nutri</summary><div class="stack">
+        <p class="muted">Plano: ${esc(D().planFile || "—")}<br>Tabela de conversões: ${esc(D().convFile || "não importada")}</p>
+        <button class="btn sm" data-act="diet-import">Importar PDF novo</button>
+        <p class="muted">Ao importar um plano novo, as marcações dos dias anteriores ficam guardadas.</p></div></details>
+    </section>
+  </main>`;
+}
+
+function viewSwap(){
+  const sw = UI.swap; const date = dietDate(); const m = mealBy(sw.k); if (!m) { UI.view = null; return viewDieta(); }
+  const it = m.options[sw.o].items[sw.i]; const cur = dayRO(date).swaps[itemKey(sw.k, sw.o, sw.i)];
+  const conv = D().conv; const eq = conv ? SVDiet.equivalents(conv, it.name, it.amount, it.unit) : null;
+  const subs = (it.subs || []).map(s => `<button class="eqrow" data-act="swap-apply" data-name="${esc(s.name)}" data-qty="${esc(s.qty)}" data-from="nutri"><span class="grow"><b>${esc(s.name)}</b></span><span class="num eqv">${esc(qtyLabel(s))}${s.house && s.amount != null ? `<small>${esc(fmtAmt(s.amount, s.unit))}</small>` : ""}</span></button>`).join("");
+  let table = "";
+  if (!conv) table = `<section class="card stack"><h3>Tabela de conversões</h3><p class="muted small">Importe o PDF da tabela para ver todas as trocas com a quantidade calculada.</p><button class="btn" data-act="diet-import">Importar tabela (PDF)</button></section>`;
+  else if (!eq) table = `<section class="card stack"><h3>Tabela de conversões</h3><p class="muted small">“${esc(it.name)}” não está na tabela da nutri. Use as substituições acima ou pergunte a ela.</p></section>`;
+  else {
+    const calc = eq.refEq != null;
+    const rows = eq.rows.filter(r => !r.isSelf).map(r => {
+      const val = calc ? (r.calc.text ? "≈ " + r.calc.text.toLowerCase() : fmtAmt(r.calc.a, r.calc.u)) : "";
+      const qty = calc ? (r.calc.text ? r.calc.text.toLowerCase() : `${String(r.calc.a).replace(".", ",")}${r.calc.u === "unid" ? " unid." : r.calc.u}`) : "";
+      return calc
+        ? `<button class="eqrow" data-act="swap-apply" data-name="${esc(r.name)}" data-qty="${esc(qty)}" data-from="tabela" data-search="${esc(norm(r.name))}"><span class="grow">${esc(r.name)}${r.isRef ? ' <span class="pill">referência</span>' : ""}</span><span class="num eqv">${esc(val)}</span></button>`
+        : `<div class="eqrow static" data-search="${esc(norm(r.name))}"><span class="grow">${esc(r.name)}</span><span class="num eqv small">${r.vals.map(v => esc(v.toLowerCase())).join(" · ")}</span></div>`;
+    }).join("");
+    const note = eq.partial ? `<p class="hint warn-b">“${esc(it.name)}” não aparece igual na tabela. O mais parecido é ${esc(eq.match)}, então a quantidade não é calculada. Confira com a nutri antes de trocar.</p>`
+      : !calc ? `<p class="hint warn-b">A tabela mede ${esc(eq.match.toLowerCase())} em unidades, então não dá para calcular a partir de ${esc(qtyLabel(it))}. Colunas: ${eq.refCols.map(v => esc(v.toLowerCase())).join(" · ")} de ${esc(eq.refName.toLowerCase())}.</p>`
+      : `<p class="small muted">${esc(qtyLabel(it))}${it.house && it.amount != null ? " (" + esc(fmtAmt(it.amount, it.unit)) + ")" : ""} de ${esc(it.name.toLowerCase())} equivalem a <b class="num">${esc(fmtAmt(Math.round(eq.refEq * 10) / 10, eq.refUnit))}</b> de ${esc(eq.refName.toLowerCase())}, a referência do grupo. Toque num alimento para trocar.</p>`;
+    table = `<section class="card stack"><div class="spread"><h3>Tabela de conversões · ${esc(eq.cat)}</h3></div>${note}
+      <input class="input" id="swapq" type="search" placeholder="Buscar alimento" autocomplete="off" aria-label="Buscar alimento na tabela">
+      <div class="eqlist">${rows}</div></section>`;
+  }
+  return `<div class="top"><div class="row" style="flex-wrap:nowrap;min-width:0"><button class="icon-btn" data-act="swap-close" aria-label="Voltar">${ICONS.back}</button><div style="min-width:0"><span class="label eyebrow">Trocar · ${esc(prettyMeal(m.name))}</span><h1>${esc(it.name)}</h1></div></div></div>
+  <main>
+    <section class="card stack"><div class="spread"><span class="label">Porção do plano</span><span class="num"><b>${esc(qtyLabel(it))}</b>${it.house && it.amount != null ? ` <span class="muted small">${esc(fmtAmt(it.amount, it.unit))}</span>` : ""}</span></div>
+      ${cur ? `<div class="spread"><span class="small">Hoje você trocou por <b>${esc(cur.name)}</b> · ${esc(qtyLabel(cur))}</span><button class="btn sm" data-act="swap-reset">Desfazer</button></div>` : ""}
+    </section>
+    ${subs ? `<section class="card stack"><h3>Substituições indicadas pela nutri</h3><div class="eqlist">${subs}</div></section>` : ""}
+    ${table}
+  </main>`;
+}
+function viewTodayMeal(){
+  if (!DP()) return "";
+  const t = todayStr(); const k = nextMeal(t); const st = dayStats(t);
+  if (!k) return `<div class="card flat spread"><div><span class="label">Dieta</span><p><b>Todas as ${st.total} refeições feitas hoje</b></p></div><button class="btn sm" data-act="tab" data-tab="dieta">Abrir</button></div>`;
+  const m = mealBy(k); const o = chosenOpt(t, k); const items = m.options[o].items.map((_, i) => itemView(t, k, o, i));
+  return `<div class="card stack"><div class="spread"><span class="label">Próxima refeição</span><span class="small muted num">${st.done} de ${st.total} hoje</span></div>
+    <div class="row" style="flex-wrap:nowrap"><button class="tick" data-act="meal-done" data-k="${esc(k)}" aria-pressed="false" aria-label="Marcar ${esc(m.name)} como feita"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+      <div style="min-width:0;flex:1"><h3>${esc(prettyMeal(m.name))}</h3><p class="small muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${items.map(x => esc(x.name)).join(" · ")}</p></div>
+      <button class="btn sm" data-act="tab" data-tab="dieta">Ver</button></div></div>`;
+}
+
+function dietAct(act, b){
+  const date = dietDate();
+  switch (act) {
+    case "diet-import": $("#dietFile").value = ""; $("#dietFile").click(); return true;
+    case "diet-day": { const d = parseYmd(date); d.setDate(d.getDate() + (+b.dataset.d)); const ds = ymd(d); UI.dietDate = ds >= todayStr() ? null : ds; UI.keepScroll = false; render(); return true; }
+    case "diet-goto": UI.dietDate = b.dataset.date >= todayStr() ? null : b.dataset.date; if (b.dataset.date > todayStr()) return true; render(); return true;
+    case "meal-done": { const k = b.dataset.k; const d = dayRW(date === todayStr() || UI.tab === "dieta" ? date : todayStr()); const m = mealBy(k); const o = chosenOpt(date, k);
+      if (d.done[k]) { delete d.done[k]; } else { d.done[k] = Date.now(); m.options[o].items.forEach((_, i) => { d.items[itemKey(k, o, i)] = true; }); }
+      persist(); UI.keepScroll = true; render(); return true; }
+    case "food": { const { k } = b.dataset, o = +b.dataset.o, i = +b.dataset.i; const d = dayRW(date); const ik = itemKey(k, o, i);
+      if (d.items[ik]) delete d.items[ik]; else d.items[ik] = true;
+      const pr = mealProgress(date, k); if (pr.n === pr.total) { if (!d.done[k]) d.done[k] = Date.now(); } else delete d.done[k];
+      persist(); UI.keepScroll = true; render(); return true; }
+    case "meal-opt": { const d = dayRW(date); d.opt[b.dataset.k] = +b.dataset.o; persist(); UI.keepScroll = true; render(); return true; }
+    case "swap-open": UI.swap = { k: b.dataset.k, o: +b.dataset.o, i: +b.dataset.i }; UI.swapReturnY = window.scrollY; UI.view = "swap"; render(); window.scrollTo(0, 0); return true;
+    case "swap-close": UI.view = null; render(); window.scrollTo(0, UI.swapReturnY || 0); return true;
+    case "swap-apply": { const d = dayRW(date); const q = SVDiet.parseQty(b.dataset.qty); d.swaps[itemKey(UI.swap.k, UI.swap.o, UI.swap.i)] = Object.assign({ name: b.dataset.name, qty: b.dataset.qty, from: b.dataset.from }, q); persist(); UI.view = null; render(); window.scrollTo(0, UI.swapReturnY || 0); toast("Trocado por " + b.dataset.name); return true; }
+    case "swap-reset": { const d = dayRW(date); delete d.swaps[itemKey(UI.swap.k, UI.swap.o, UI.swap.i)]; persist(); UI.keepScroll = true; render(); return true; }
+    case "water": { const d = dayRW(date); d.water = Math.max(0, (d.water || 0) + (+b.dataset.ml)); persist(); UI.keepScroll = true; render(); return true; }
+    case "diet-reorder": UI.dietReorder = !UI.dietReorder; render(); return true;
+    case "meal-move": { const d = dayRW(date); const ord = mealOrder(date); const i = ord.indexOf(b.dataset.k), j = i + (+b.dataset.d); if (j < 0 || j >= ord.length) return true; [ord[i], ord[j]] = [ord[j], ord[i]]; d.order = ord; persist(); UI.keepScroll = true; render(); return true; }
+    case "order-default": S.diet.order = mealOrder(date); Object.keys(S.dietDays || {}).forEach(ds => { if (ds >= todayStr()) S.dietDays[ds].order = null; }); persist(); toast("Ordem salva como padrão"); render(); return true;
+    case "order-reset": { const keys = DP().meals.map(mealKey); S.diet.order = keys; const d = dayRW(date); d.order = null; persist(); UI.keepScroll = true; render(); return true; }
+  }
+  return false;
+}
 
 /* ============================================================
    Actions
@@ -915,9 +1358,10 @@ function moveEx(s, i, dir){ const j = i + dir; if (j < 0 || j >= s.exercises.len
 document.addEventListener("click", async ev => {
   const b = ev.target.closest("[data-act]"); if (!b || b.disabled) return;
   const act = b.dataset.act;
+  if (dietAct(act, b)) return;
   const s = UI.editKey ? sess(UI.editKey) : null;
   switch (act) {
-    case "tab": go(() => { UI.tab = b.dataset.tab; UI.view = null; UI.editKey = null; }); break;
+    case "tab": go(() => { UI.tab = b.dataset.tab; UI.view = null; UI.editKey = null; UI.dietReorder = false; if (b.dataset.tab !== "dieta") UI.dietDate = null; }); break;
     case "pick-file": $("#file").value = ""; $("#file").click(); break;
     case "start": go(() => startSession(b.dataset.key)); break;
     case "resume": go(() => { UI.view = "runner"; requestWakeLock(); }); break;
@@ -956,6 +1400,7 @@ document.addEventListener("click", async ev => {
 });
 document.addEventListener("input", ev => {
   const el = ev.target;
+  if (el.id === "swapq") { const q = norm(el.value); document.querySelectorAll(".eqlist [data-search]").forEach(r => { r.hidden = !!q && !r.dataset.search.includes(q); }); return; }
   if (el.dataset.ex && el.dataset.k && S.draft) {
     const en = S.draft.entries[el.dataset.ex] || (S.draft.entries[el.dataset.ex] = { sets: [] });
     const i = +el.dataset.set; while (en.sets.length <= i) en.sets.push({});
@@ -978,6 +1423,7 @@ document.addEventListener("change", ev => {
   if (el.dataset.plan === "weeks") { const n = parseInt(el.value, 10); if (n > 0) { P().weeks = n; persist(); } return; }
   if (el.dataset.plan === "newCycle") { UI.importNewCycle = el.checked; return; }
   if (el.id === "file" && el.files[0]) handleFile(el.files[0]);
+  if (el.id === "dietFile" && el.files.length) handleDietFiles([...el.files]);
   if (el.id === "backupFile" && el.files[0]) restoreBackup(el.files[0]);
 });
 document.addEventListener("keydown", ev => { // Enter jumps to next set field
@@ -1033,7 +1479,9 @@ async function boot(){
   }
   if ("serviceWorker" in navigator && !window.claude && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
 }
-window.SV = { parseWorkbook, buildWorkbook, get state(){ return S; } }; // for tests
+window.SV = { parseWorkbook, buildWorkbook, handleDietFiles, get state(){ return S; } }; // for tests
 boot();
 })();
 </script>
+</body>
+</html>

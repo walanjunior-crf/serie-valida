@@ -1,6 +1,6 @@
 // Série Válida — service worker: cache do app shell para abrir offline na academia.
 // A planilha importada e os registros ficam no IndexedDB do navegador, não aqui.
-const CACHE = "sv-shell-v1";
+const CACHE = "sv-shell-v2";
 const SHELL = ["./", "./index.html", "./manifest.json", "./icon.svg",
   "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"];
 
