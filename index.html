@@ -62,6 +62,7 @@ button{cursor:pointer}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .spread{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .spread>*{min-width:0}
+.spread.wrap{flex-wrap:wrap;row-gap:8px}
 
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:14px 0 10px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
 .top .eyebrow{display:block;margin-bottom:2px}
@@ -243,6 +244,18 @@ dd{margin:0;color:var(--muted)}
 .eqv{font-weight:700;text-align:right;white-space:nowrap}
 .eqrow.static .eqv{font-weight:500;white-space:normal}
 .hint.warn-b{background:var(--warn-bg);color:var(--warn)}
+.eqn{display:block}
+.eqrow small{display:block;font-size:.75rem}
+.up-k{color:var(--warn)}
+.down-k{color:var(--good)}
+.seg.basis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%}
+.basis button{padding:6px 2px;font-size:.85rem}
+.scope{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;cursor:pointer}
+.scope input{width:22px;height:22px;margin:2px 0 0;accent-color:var(--accent);flex:none}
+.scope small{display:block;color:var(--muted);font-size:.85rem;margin-top:2px}
+.swapnow{display:flex;gap:12px;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:12px;flex-wrap:wrap}
+.swapnow>div{min-width:0;flex:1}
+select{appearance:auto;-webkit-appearance:menulist}
 @media (max-width:440px){.grid3{grid-template-columns:1fr 1fr}}
 @media (max-width:380px){.set,.set-head{grid-template-columns:minmax(0,1fr) 84px 66px}}
 @media (prefers-reduced-motion:no-preference){.btn,.chk,.tab{transition:background-color .15s,color .15s}}
@@ -442,6 +455,9 @@ dd{margin:0;color:var(--muted)}
 
 </script>
 <script>
+window.SV_FOODS = {"source":"TACO 4ª edição (NEPA/Unicamp), valores por 100 g; itens marcados como rótulo usam média de embalagens","groups":{"prot":{"label":"Proteínas","basis":"p"},"carb":{"label":"Carboidratos","basis":"c"},"fruta":{"label":"Frutas","basis":"c"},"lat":{"label":"Leites e queijos","basis":"k"},"gord":{"label":"Gorduras e castanhas","basis":"l"},"doce":{"label":"Doces","basis":"k"}},"foods":[{"id":"t410","n":"Peito de frango grelhado","g":"prot","k":159.0,"p":32.0,"c":0.0,"l":2.5,"src":"TACO","taco":"Frango, peito, sem pele, grelhado","a":["peito de frango","frango grelhado","file de frango","frango"]},{"id":"t408","n":"Peito de frango cozido","g":"prot","k":163.0,"p":31.5,"c":0.0,"l":3.2,"src":"TACO","taco":"Frango, peito, sem pele, cozido","a":["frango cozido","frango desfiado"]},{"id":"t398","n":"Coxa de frango sem pele, cozida","g":"prot","k":167.0,"p":26.9,"c":0.0,"l":5.8,"src":"TACO","taco":"Frango, coxa, sem pele, cozida","a":["coxa de frango"]},{"id":"t413","n":"Sobrecoxa sem pele, assada","g":"prot","k":233.0,"p":29.2,"c":0.0,"l":12.0,"src":"TACO","taco":"Frango, sobrecoxa, sem pele, assada","a":["sobrecoxa"]},{"id":"t346","n":"Contra-filé grelhado","g":"prot","k":194.0,"p":35.9,"c":0.0,"l":4.5,"src":"TACO","taco":"Carne, bovina, contra-filé, sem gordura, grelhado","a":["contrafile","contra file","bife"]},{"id":"t377","n":"Patinho grelhado","g":"prot","k":219.0,"p":35.9,"c":0.0,"l":7.3,"src":"TACO","taco":"Carne, bovina, patinho, sem gordura, grelhado","a":["patinho","patinho moido"]},{"id":"t370","n":"Alcatra grelhada","g":"prot","k":241.0,"p":31.9,"c":0.0,"l":11.6,"src":"TACO","taco":"Carne, bovina, miolo de alcatra, sem gordura, grelhado","a":["alcatra","carne","carne vermelha"]},{"id":"t358","n":"Filé mignon grelhado","g":"prot","k":220.0,"p":32.8,"c":0.0,"l":8.8,"src":"TACO","taco":"Carne, bovina, filé mingnon, sem gordura, grelhado","a":["file mignon","mignon"]},{"id":"t351","n":"Coxão mole cozido","g":"prot","k":219.0,"p":32.4,"c":0.0,"l":8.9,"src":"TACO","taco":"Carne, bovina, coxão mole, sem gordura, cozido","a":["coxao mole"]},{"id":"t326","n":"Carne moída (acém) cozida","g":"prot","k":212.0,"p":26.7,"c":0.0,"l":10.9,"src":"TACO","taco":"Carne, bovina, acém, moído, cozido","a":["carne moida","acem"]},{"id":"t432","n":"Lombo de porco assado","g":"prot","k":210.0,"p":35.7,"c":0.0,"l":6.4,"src":"TACO","taco":"Porco, lombo, assado","a":["lombo","lombo suino","mignon suino"]},{"id":"t317","n":"Salmão grelhado","g":"prot","k":243.0,"p":26.1,"c":0.0,"l":14.5,"src":"TACO","taco":"Salmão, sem pele, fresco, grelhado","a":["salmao"]},{"id":"t276","n":"Peixe branco grelhado (abadejo)","g":"prot","k":130.0,"p":27.6,"c":0.0,"l":1.3,"src":"TACO","taco":"Abadejo, filé, congelado, grelhado","a":["peixe","abadejo","tilapia","peixe grelhado"]},{"id":"t301","n":"Merluza assada","g":"prot","k":122.0,"p":26.6,"c":0.0,"l":0.9,"src":"TACO","taco":"Merluza, filé, assado","a":["merluza"]},{"id":"t277","n":"Atum em óleo (lata)","g":"prot","k":166.0,"p":26.2,"c":0.0,"l":6.0,"src":"TACO","taco":"Atum, conserva em óleo","a":["atum","atum em oleo"]},{"id":"t318","n":"Sardinha assada","g":"prot","k":164.0,"p":32.2,"c":0.0,"l":3.0,"src":"TACO","taco":"Sardinha, assada","a":["sardinha"]},{"id":"t284","n":"Camarão cozido","g":"prot","k":90.0,"p":19.0,"c":0.0,"l":1.0,"src":"TACO","taco":"Camarão, Rio Grande, grande, cozido","a":["camarao"]},{"id":"t425","n":"Peito de peru assado","g":"prot","k":163.0,"p":26.2,"c":0.0,"l":5.7,"src":"TACO","taco":"Peru, congelado, assado","a":["peru","peito de peru"]},{"id":"t439","n":"Presunto magro","g":"prot","k":94.0,"p":14.3,"c":2.1,"l":2.7,"src":"TACO","taco":"Presunto, sem capa de gordura","a":["presunto"]},{"id":"t488","n":"Ovo cozido","g":"prot","k":146.0,"p":13.3,"c":0.6,"l":9.5,"src":"TACO","taco":"Ovo, de galinha, inteiro, cozido/10minutos","a":["ovo","ovo de galinha","ovos","ovo inteiro"],"u":[50,"ovo"]},{"id":"t490","n":"Ovo frito","g":"prot","k":240.0,"p":15.6,"c":1.2,"l":18.6,"src":"TACO","taco":"Ovo, de galinha, inteiro, frito","a":["ovo frito"],"u":[50,"ovo"]},{"id":"t486","n":"Clara de ovo cozida","g":"prot","k":59.0,"p":13.4,"c":0.0,"l":0.1,"src":"TACO","taco":"Ovo, de galinha, clara, cozida/10minutos","a":["clara","claras"],"u":[30,"clara"]},{"id":"t584","n":"Tofu","g":"prot","k":64.0,"p":6.6,"c":2.1,"l":4.0,"src":"TACO","taco":"Soja, queijo (tofu)","a":["tofu"]},{"id":"t3","n":"Arroz branco cozido","g":"carb","k":128.0,"p":2.5,"c":28.1,"l":0.2,"src":"TACO","taco":"Arroz, tipo 1, cozido","a":["arroz","arroz cozido","arroz branco"],"u":[25,"colher de sopa cheia"]},{"id":"t1","n":"Arroz integral cozido","g":"carb","k":124.0,"p":2.6,"c":25.8,"l":1.0,"src":"TACO","taco":"Arroz, integral, cozido","a":["arroz integral"],"u":[25,"colher de sopa cheia"]},{"id":"t567","n":"Feijão preto cozido","g":"carb","k":77.0,"p":4.5,"c":14.0,"l":0.5,"src":"TACO","taco":"Feijão, preto, cozido","a":["feijao preto","feijao"],"u":[140,"concha cheia"]},{"id":"t561","n":"Feijão carioca cozido","g":"carb","k":76.0,"p":4.8,"c":13.6,"l":0.5,"src":"TACO","taco":"Feijão, carioca, cozido","a":["feijao carioca"],"u":[140,"concha cheia"]},{"id":"t577","n":"Lentilha cozida","g":"carb","k":93.0,"p":6.3,"c":16.3,"l":0.5,"src":"TACO","taco":"Lentilha, cozida","a":["lentilha"]},{"id":"t91","n":"Batata inglesa cozida","g":"carb","k":52.0,"p":1.2,"c":11.9,"l":0.0,"src":"TACO","taco":"Batata, inglesa, cozida","a":["batata","batata inglesa","pure de batata"]},{"id":"t88","n":"Batata-doce cozida","g":"carb","k":77.0,"p":0.6,"c":18.4,"l":0.1,"src":"TACO","taco":"Batata, doce, cozida","a":["batata doce"]},{"id":"t86","n":"Batata baroa cozida","g":"carb","k":80.0,"p":0.9,"c":18.9,"l":0.2,"src":"TACO","taco":"Batata, baroa, cozida","a":["batata baroa","mandioquinha"]},{"id":"t129","n":"Mandioca cozida","g":"carb","k":125.0,"p":0.6,"c":30.1,"l":0.3,"src":"TACO","taco":"Mandioca, cozida","a":["mandioca","aipim","macaxeira"]},{"id":"t64","n":"Abóbora cabotiá cozida","g":"carb","k":48.0,"p":1.4,"c":10.8,"l":0.7,"src":"TACO","taco":"Abóbora, cabotian, cozida","a":["abobora"]},{"id":"t533","n":"Cuscuz de milho","g":"carb","k":113.0,"p":2.2,"c":25.3,"l":0.7,"src":"TACO","taco":"Cuscuz, de milho, cozido com sal","a":["cuscuz"]},{"id":"t45","n":"Milho verde (lata)","g":"carb","k":98.0,"p":3.2,"c":17.1,"l":2.4,"src":"TACO","taco":"Milho, verde, enlatado, drenado","a":["milho","milho verde"]},{"id":"t40","n":"Macarrão cru (pese antes de cozinhar)","g":"carb","k":371.0,"p":10.0,"c":77.9,"l":1.3,"src":"TACO","taco":"Macarrão, trigo, cru","a":["macarrao","massa","espaguete"]},{"id":"t53","n":"Pão francês","g":"carb","k":300.0,"p":8.0,"c":58.6,"l":3.1,"src":"TACO","taco":"Pão, trigo, francês","a":["pao frances","pao"],"u":[50,"pão"]},{"id":"t52","n":"Pão de forma integral","g":"carb","k":253.0,"p":9.4,"c":49.9,"l":3.7,"src":"TACO","taco":"Pão, trigo, forma, integral","a":["pao integral","pao de forma integral"],"u":[25,"fatia"]},{"id":"t7","n":"Aveia em flocos","g":"carb","k":394.0,"p":13.9,"c":66.6,"l":8.5,"src":"TACO","taco":"Aveia, flocos, crua","a":["aveia"]},{"id":"t25","n":"Cereal de milho (sem açúcar)","g":"carb","k":365.0,"p":7.2,"c":83.8,"l":1.0,"src":"TACO","taco":"Cereal matinal, milho","a":["cereal","cereal matinal","sucrilhos","corn flakes"]},{"id":"t8","n":"Biscoito maisena","g":"carb","k":443.0,"p":8.1,"c":75.2,"l":12.0,"src":"TACO","taco":"Biscoito, doce, maisena","a":["biscoito maisena","bolacha maisena"]},{"id":"t13","n":"Biscoito cream cracker","g":"carb","k":432.0,"p":10.1,"c":68.7,"l":14.4,"src":"TACO","taco":"Biscoito, salgado, cream cracker","a":["cream cracker","bolacha agua e sal"]},{"id":"t63","n":"Torrada","g":"carb","k":377.0,"p":10.5,"c":74.6,"l":3.3,"src":"TACO","taco":"Torrada, pão francês","a":["torrada"]},{"id":"t124","n":"Goma de tapioca (seca)","g":"carb","k":331.0,"p":0.5,"c":81.1,"l":0.3,"src":"TACO","taco":"Fécula, de mandioca","a":["tapioca","goma de tapioca","fecula de mandioca"]},{"id":"t131","n":"Farofa pronta","g":"carb","k":406.0,"p":2.1,"c":80.3,"l":9.1,"src":"TACO","taco":"Mandioca, farofa, temperada","a":["farofa"]},{"id":"t61","n":"Pipoca","g":"carb","k":448.0,"p":9.9,"c":70.3,"l":15.9,"src":"TACO","taco":"Pipoca, com óleo de soja, sem sal","a":["pipoca"]},{"id":"t93","n":"Batata frita (caseira)","g":"carb","k":267.0,"p":5.0,"c":35.6,"l":13.1,"src":"TACO","taco":"Batata, inglesa, frita","a":["batata frita"]},{"id":"t182","n":"Banana prata","g":"fruta","k":98.0,"p":1.3,"c":26.0,"l":0.1,"src":"TACO","taco":"Banana, prata, crua","a":["banana","banana prata"]},{"id":"t179","n":"Banana nanica","g":"fruta","k":92.0,"p":1.4,"c":23.8,"l":0.1,"src":"TACO","taco":"Banana, nanica, crua","a":["banana nanica","banana dagua"]},{"id":"t164","n":"Abacaxi","g":"fruta","k":48.0,"p":0.9,"c":12.3,"l":0.1,"src":"TACO","taco":"Abacaxi, cru","a":["abacaxi"]},{"id":"t225","n":"Mamão formosa","g":"fruta","k":45.0,"p":0.8,"c":11.6,"l":0.1,"src":"TACO","taco":"Mamão, Formosa, cru","a":["mamao","mamao formosa"]},{"id":"t226","n":"Mamão papaia","g":"fruta","k":40.0,"p":0.5,"c":10.4,"l":0.1,"src":"TACO","taco":"Mamão, Papaia, cru","a":["mamao papaia","papaia"]},{"id":"t231","n":"Manga","g":"fruta","k":51.0,"p":0.9,"c":12.8,"l":0.2,"src":"TACO","taco":"Manga, Tommy Atkins, crua","a":["manga"]},{"id":"t236","n":"Melão","g":"fruta","k":29.0,"p":0.7,"c":7.5,"l":0.0,"src":"TACO","taco":"Melão, cru","a":["melao"]},{"id":"t235","n":"Melancia","g":"fruta","k":33.0,"p":0.9,"c":8.1,"l":0.0,"src":"TACO","taco":"Melancia, crua","a":["melancia"]},{"id":"t256","n":"Uva","g":"fruta","k":53.0,"p":0.7,"c":13.6,"l":0.2,"src":"TACO","taco":"Uva, Itália, crua","a":["uva","uva italia"]},{"id":"t222","n":"Maçã","g":"fruta","k":56.0,"p":0.3,"c":15.2,"l":0.0,"src":"TACO","taco":"Maçã, Fuji, com casca, crua","a":["maca","maca verde","maca fuji"]},{"id":"t243","n":"Pera","g":"fruta","k":53.0,"p":0.6,"c":14.0,"l":0.1,"src":"TACO","taco":"Pêra, Williams, crua","a":["pera"]},{"id":"t214","n":"Laranja","g":"fruta","k":37.0,"p":1.0,"c":8.9,"l":0.1,"src":"TACO","taco":"Laranja, pêra, crua","a":["laranja"]},{"id":"t215","n":"Suco de laranja","g":"fruta","k":33.0,"p":0.7,"c":7.6,"l":0.1,"src":"TACO","taco":"Laranja, pêra, suco","a":["suco de laranja"]},{"id":"t239","n":"Morango","g":"fruta","k":30.0,"p":0.9,"c":6.8,"l":0.3,"src":"TACO","taco":"Morango, cru","a":["morango"]},{"id":"t207","n":"Kiwi","g":"fruta","k":51.0,"p":1.3,"c":11.5,"l":0.6,"src":"TACO","taco":"Kiwi, cru","a":["kiwi"]},{"id":"t200","n":"Goiaba","g":"fruta","k":54.0,"p":1.1,"c":13.0,"l":0.4,"src":"TACO","taco":"Goiaba, vermelha, com casca, crua","a":["goiaba"]},{"id":"t168","n":"Açaí (polpa sem açúcar)","g":"fruta","k":58.0,"p":0.8,"c":6.2,"l":3.9,"src":"TACO","taco":"Açaí, polpa, congelada","a":["acai"]},{"id":"t449","n":"Iogurte natural desnatado","g":"lat","k":41.0,"p":3.8,"c":5.8,"l":0.3,"src":"TACO","taco":"Iogurte, natural, desnatado","a":["iogurte","iogurte zero","iogurte desnatado"]},{"id":"t448","n":"Iogurte natural integral","g":"lat","k":51.0,"p":4.1,"c":1.9,"l":3.0,"src":"TACO","taco":"Iogurte, natural","a":["iogurte natural","iogurte integral"]},{"id":"t463","n":"Mussarela","g":"lat","k":330.0,"p":22.6,"c":3.0,"l":25.2,"src":"TACO","taco":"Queijo, mozarela","a":["mussarela","queijo mussarela","mozarela","muçarela"],"u":[20,"fatia"]},{"id":"t461","n":"Queijo minas frescal","g":"lat","k":264.0,"p":17.4,"c":3.2,"l":20.2,"src":"TACO","taco":"Queijo, minas, frescal","a":["queijo minas","minas frescal","queijo branco"]},{"id":"t467","n":"Queijo prato","g":"lat","k":360.0,"p":22.7,"c":1.9,"l":29.1,"src":"TACO","taco":"Queijo, prato","a":["queijo prato"],"u":[20,"fatia"]},{"id":"t464","n":"Parmesão","g":"lat","k":453.0,"p":35.6,"c":1.7,"l":33.5,"src":"TACO","taco":"Queijo, parmesão","a":["parmesao","queijo ralado"]},{"id":"t469","n":"Ricota","g":"lat","k":140.0,"p":12.6,"c":3.8,"l":8.1,"src":"TACO","taco":"Queijo, ricota","a":["ricota"]},{"id":"t468","n":"Requeijão cremoso","g":"lat","k":257.0,"p":9.6,"c":2.4,"l":23.4,"src":"TACO","taco":"Queijo, requeijão, cremoso","a":["requeijao"]},{"id":"t260","n":"Azeite de oliva","g":"gord","k":884.0,"p":0.0,"c":0.0,"l":100.0,"src":"TACO","taco":"Azeite, de oliva, extra virgem","a":["azeite","oleo"]},{"id":"t261","n":"Manteiga","g":"gord","k":726.0,"p":0.4,"c":0.1,"l":82.4,"src":"TACO","taco":"Manteiga, com sal","a":["manteiga"]},{"id":"t163","n":"Abacate","g":"gord","k":96.0,"p":1.2,"c":6.0,"l":8.4,"src":"TACO","taco":"Abacate, cru","a":["abacate"]},{"id":"t558","n":"Amendoim torrado","g":"gord","k":606.0,"p":22.5,"c":18.7,"l":54.0,"src":"TACO","taco":"Amendoim, torrado, salgado","a":["amendoim"]},{"id":"t588","n":"Castanha de caju","g":"gord","k":570.0,"p":18.5,"c":29.1,"l":46.3,"src":"TACO","taco":"Castanha-de-caju, torrada, salgada","a":["castanha de caju","castanha"]},{"id":"t589","n":"Castanha-do-pará","g":"gord","k":643.0,"p":14.5,"c":15.1,"l":63.5,"src":"TACO","taco":"Castanha-do-Brasil, crua","a":["castanha do para","castanha do brasil"]},{"id":"t587","n":"Amêndoa","g":"gord","k":581.0,"p":18.6,"c":29.5,"l":47.3,"src":"TACO","taco":"Amêndoa, torrada, salgada","a":["amendoa","amendoas"]},{"id":"t594","n":"Linhaça","g":"gord","k":495.0,"p":14.1,"c":43.3,"l":32.3,"src":"TACO","taco":"Linhaça, semente","a":["linhaca"]},{"id":"t487","n":"Gema de ovo","g":"gord","k":353.0,"p":15.9,"c":1.6,"l":30.8,"src":"TACO","taco":"Ovo, de galinha, gema, cozida/10minutos","a":["gema"],"u":[17,"gema"]},{"id":"t447","n":"Creme de leite","g":"gord","k":221.0,"p":1.5,"c":4.5,"l":22.5,"src":"TACO","taco":"Creme de Leite","a":["creme de leite"]},{"id":"t507","n":"Mel","g":"doce","k":309.0,"p":0.0,"c":84.0,"l":0.0,"src":"TACO","taco":"Mel, de abelha","a":["mel"]},{"id":"t453","n":"Leite condensado","g":"doce","k":313.0,"p":7.7,"c":57.0,"l":6.7,"src":"TACO","taco":"Leite, condensado","a":["leite condensado"]},{"id":"t495","n":"Chocolate ao leite","g":"doce","k":540.0,"p":7.2,"c":59.6,"l":30.3,"src":"TACO","taco":"Chocolate, ao leite","a":["chocolate","chocolate ao leite"]},{"id":"t501","n":"Doce de leite","g":"doce","k":306.0,"p":5.5,"c":59.5,"l":6.0,"src":"TACO","taco":"Doce, de leite, cremoso","a":["doce de leite"]},{"id":"t198","n":"Goiabada","g":"doce","k":269.0,"p":0.6,"c":74.1,"l":0.0,"src":"TACO","taco":"Goiaba, doce em pasta","a":["goiabada"]},{"id":"t510","n":"Rapadura","g":"doce","k":352.0,"p":1.0,"c":90.8,"l":0.1,"src":"TACO","taco":"Rapadura","a":["rapadura"]},{"id":"t579","n":"Paçoca","g":"doce","k":487.0,"p":16.0,"c":52.4,"l":26.1,"src":"TACO","taco":"Paçoca, amendoim","a":["pacoca"]},{"id":"r1","n":"Whey protein","g":"prot","k":380,"p":78,"c":8,"l":5,"src":"rotulo","a":["whey","whey protein"],"u":[30,"dose"]},{"id":"r2","n":"Atum em água (lata)","g":"prot","k":110,"p":25,"c":0,"l":1,"src":"rotulo","a":["atum em agua","atum ao natural"]},{"id":"r3","n":"Pão de forma tradicional","g":"carb","k":250,"p":8.8,"c":48,"l":2.4,"src":"rotulo","a":["pao de forma","pao de forma tradicional","pao branco"],"u":[25,"fatia"]},{"id":"r4","n":"Granola","g":"carb","k":410,"p":9,"c":68,"l":11,"src":"rotulo","a":["granola"]},{"id":"r5","n":"Batata palito congelada (forno/air fryer)","g":"carb","k":140,"p":2.5,"c":22,"l":4.5,"src":"rotulo","a":["batata palito","batata palito congelada","mccain"]},{"id":"r6","n":"Leite desnatado","g":"lat","k":35,"p":3.3,"c":4.9,"l":0.1,"src":"rotulo","a":["leite desnatado","leite"]},{"id":"r7","n":"Leite integral","g":"lat","k":61,"p":3.1,"c":4.6,"l":3.3,"src":"rotulo","a":["leite integral"]},{"id":"r8","n":"Pasta de amendoim integral","g":"gord","k":590,"p":25,"c":16,"l":50,"src":"rotulo","a":["pasta de amendoim"],"u":[15,"colher de sopa"]}]};
+</script>
+<script>
 /* ============================================================
    Série Válida — app de treino local-first
    Dados: IndexedDB no aparelho (+ banco da conta quando aberto no claude.ai)
@@ -449,7 +465,7 @@ dd{margin:0;color:var(--muted)}
    ============================================================ */
 (function(){
 "use strict";
-const APP_VERSION = "0.2.0";
+const APP_VERSION = "0.3.0";
 const NS_MAIN = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
 const NS_R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
 const NS_PKG = "http://schemas.openxmlformats.org/package/2006/relationships";
@@ -501,7 +517,7 @@ const UI = { tab: "hoje", view: null, histMode: "sessoes", editKey: null, confir
 const dirtyLogs = new Set(), deletedLogs = new Set();
 let saveTimer = null;
 
-function blankState(){ return { v:1, updatedAt:0, program:null, logs:[], draft:null, cycleStart:null, rotPos:0, coachMode:false, diet:null, dietDays:{} }; }
+function blankState(){ return { v:1, updatedAt:0, program:null, logs:[], draft:null, cycleStart:null, rotPos:0, coachMode:false, diet:null, dietDays:{}, customFoods:[], foodEdits:{} }; }
 function persist(logId){
   S.updatedAt = Date.now();
   if (logId) dirtyLogs.add(logId);
@@ -1120,6 +1136,8 @@ function render(){
   const sy = window.scrollY;
   let html;
   if (UI.view === "swap" && DP()) html = viewSwap();
+  else if (UI.view === "conv") html = viewConv();
+  else if (UI.view === "food" && UI.foodEdit) html = viewFoodEdit();
   else if (!S.program && UI.tab === "dieta") { UI.view = null; html = viewDieta(); }
   else if (!S.program) { html = viewOnboarding(); UI.view = null; }
   else if (UI.view === "runner" && S.draft) html = viewRunner();
@@ -1154,7 +1172,7 @@ function mealOrder(date){
 const mealBy = k => DP().meals.find(m => mealKey(m) === k);
 const itemKey = (k, o, i) => k + "|" + o + "|" + i;
 function chosenOpt(date, k){ const m = mealBy(k); const o = dayRO(date).opt[k] ?? 0; return Math.min(o, m.options.length - 1); }
-function itemView(date, k, o, i){ const it = mealBy(k).options[o].items[i]; const sw = dayRO(date).swaps[itemKey(k, o, i)]; return sw ? Object.assign({}, sw, { orig: it, swapped: true }) : Object.assign({}, it, { orig: it, swapped: false }); }
+function itemView(date, k, o, i){ const it = mealBy(k).options[o].items[i]; const sw = effectiveSwap(date, k, o, i); return sw ? Object.assign({}, sw, { orig: it, swapped: true }) : Object.assign({}, it, { orig: it, swapped: false }); }
 function mealProgress(date, k){ const o = chosenOpt(date, k); const items = mealBy(k).options[o].items; const d = dayRO(date); const n = items.filter((_, i) => d.items[itemKey(k, o, i)]).length; return { n, total: items.length, o }; }
 function dayStats(date){ if (!DP()) return { done: 0, total: 0 }; const d = dayRO(date); const ks = DP().meals.map(mealKey); return { done: ks.filter(k => d.done[k]).length, total: ks.length }; }
 function nextMeal(date){ const d = dayRO(date); return mealOrder(date).find(k => !d.done[k]) || null; }
@@ -1209,11 +1227,11 @@ function viewDietEmpty(){
   const has = D() || {};
   return header("Dieta", "Plano alimentar") + `<main>
     <div class="card stack"><h2>Traga os PDFs da nutri</h2>
-      <p class="muted">Selecione o plano alimentar e a tabela de conversões. Pode escolher os dois de uma vez. O app separa as refeições, as opções de jantar, as substituições, os suplementos e a meta de água.</p>
-      <div class="drop"><button class="btn primary" data-act="diet-import">Importar PDFs da nutri</button>
-      <span class="small muted">${has.conv ? "✓ Tabela de conversões já importada. Falta o plano alimentar." : "Os PDFs costumam estar em Arquivos › Downloads ou no WhatsApp › Documentos."}</span></div>
+      <p class="muted">Selecione o PDF do plano alimentar. O app separa as refeições, as opções de jantar, as substituições, os suplementos e a meta de água. As trocas de alimento usam a tabela do próprio app, então não precisa de mais nada.</p>
+      <div class="drop"><button class="btn primary" data-act="diet-import">Importar plano alimentar (PDF)</button>
+      <span class="small muted">O PDF costuma estar em Arquivos › Downloads ou no WhatsApp › Documentos.</span></div>
     </div>
-    <div class="card flat stack small"><span class="label">No dia a dia</span><p>Toque no círculo para marcar a refeição inteira, ou em cada alimento. Use Reorganizar para mudar a ordem do dia, por exemplo o pós-treino depois do treino da noite. Em Trocar, a tabela da nutri calcula a quantidade do alimento substituto.</p></div>
+    <div class="card flat stack small"><span class="label">No dia a dia</span><p>Toque no círculo para marcar a refeição inteira, ou em cada alimento. Use Reorganizar para mudar a ordem do dia, por exemplo o pós-treino depois do treino da noite. Em Trocar, a tabela do app calcula a quantidade do substituto, e a troca vira o padrão dos próximos dias.</p></div>
   </main>`;
 }
 function viewDieta(){
@@ -1234,7 +1252,7 @@ function viewDieta(){
       const m = mealBy(k); const pr = mealProgress(date, k); const done = !!d.done[k]; const o = pr.o; const opt = m.options[o];
       const optSeg = m.options.length > 1 ? `<div class="seg opts" role="group" aria-label="Opção de ${esc(m.name)}">${m.options.map((op, oi) => `<button data-act="meal-opt" data-k="${esc(k)}" data-o="${oi}" aria-pressed="${oi === o}">${esc(oi === 0 && op.label === "Principal" ? "Opção 1" : op.label)}</button>`).join("")}</div>` : "";
       const foods = opt.items.map((_, i) => { const it = itemView(date, k, o, i); const on = !!d.items[itemKey(k, o, i)];
-        return `<li class="food ${on ? "on" : ""}"><button class="food-check" data-act="food" data-k="${esc(k)}" data-o="${o}" data-i="${i}" aria-pressed="${on}"><span class="box" aria-hidden="true"></span><span class="fname">${esc(it.name)}${it.swapped ? `<small>no lugar de ${esc(it.orig.name)}</small>` : ""}</span><span class="fqty num">${esc(qtyLabel(it))}${it.house && it.amount != null ? `<small>${esc(fmtAmt(it.amount, it.unit))}</small>` : ""}</span></button><button class="swap" data-act="swap-open" data-k="${esc(k)}" data-o="${o}" data-i="${i}" aria-label="Trocar ${esc(it.name)}">Trocar</button></li>`; }).join("");
+        return `<li class="food ${on ? "on" : ""}"><button class="food-check" data-act="food" data-k="${esc(k)}" data-o="${o}" data-i="${i}" aria-pressed="${on}"><span class="box" aria-hidden="true"></span><span class="fname">${esc(it.name)}${it.swapped ? `<small>no lugar de ${esc(it.orig.name)}${it.scope === "dia" ? " · só hoje" : ""}</small>` : ""}</span><span class="fqty num">${esc(qtyLabel(it))}${it.house && it.amount != null ? `<small>${esc(fmtAmt(it.amount, it.unit))}</small>` : ""}</span></button><button class="swap" data-act="swap-open" data-k="${esc(k)}" data-o="${o}" data-i="${i}" aria-label="Trocar ${esc(it.name)}">Trocar</button></li>`; }).join("");
       const obs = opt.obs.filter(x => x.trim());
       const when = done ? `Feita às ${new Date(d.done[k]).toTimeString().slice(0,5)}` : (k === nxt ? "Próxima" : `${pr.n} de ${pr.total} alimentos`);
       return `<article class="card meal ${done ? "done" : ""} ${k === nxt ? "next" : ""}" id="meal-${esc(k.replace(/[^a-z0-9]/g, "-"))}">
@@ -1253,49 +1271,168 @@ function viewDieta(){
       ${weekDots()}
       ${waterBlock(date)}
     </section>
-    ${UI.dietReorder ? "" : `<div class="spread"><span class="label">Refeições na ordem do dia</span><button class="btn sm" data-act="diet-reorder">Reorganizar</button></div>`}
+    ${UI.dietReorder ? "" : `<div class="spread wrap"><span class="label">Refeições do dia</span><div class="row" style="flex-wrap:nowrap"><button class="btn sm" data-act="conv-open">Conversor</button><button class="btn sm" data-act="diet-reorder">Reorganizar</button></div></div>`}
     ${body}
     <section class="card flat stack small">${guide}
       <details><summary>Arquivos da nutri</summary><div class="stack">
-        <p class="muted">Plano: ${esc(D().planFile || "—")}<br>Tabela de conversões: ${esc(D().convFile || "não importada")}</p>
+        <p class="muted">Plano: ${esc(D().planFile || "—")}${D().convFile ? "<br>Tabela da nutri (opcional): " + esc(D().convFile) : ""}</p>
         <button class="btn sm" data-act="diet-import">Importar PDF novo</button>
         <p class="muted">Ao importar um plano novo, as marcações dos dias anteriores ficam guardadas.</p></div></details>
     </section>
   </main>`;
 }
 
+/* ---------- tabela nativa (TACO) e conversões ---------- */
+const FD = () => window.SV_FOODS || { foods: [], groups: {} };
+const BASIS_LABEL = { p: "proteína", c: "carboidrato", l: "gordura", k: "calorias" };
+const UNIT_PL = { "ovo": "ovos", "clara": "claras", "gema": "gemas", "fatia": "fatias", "pão": "pães", "dose": "doses", "colher de sopa cheia": "colheres de sopa cheias", "concha cheia": "conchas cheias", "colher de sopa": "colheres de sopa", "unidade": "unidades" };
+const NSTOP = new Set(["de", "da", "do", "das", "dos", "e", "com", "sem", "em", "no", "na", "a", "o", "ao"]);
+const ntoks = s => norm(s).replace(/[^a-z0-9 ]/g, " ").split(" ").filter(w => w && !NSTOP.has(w)).map(w => w.length > 3 ? w.replace(/s$/, "") : w);
+function allFoods(){ const ed = S.foodEdits || {}; return FD().foods.map(f => ed[f.id] ? Object.assign({}, f, ed[f.id], { edited: true }) : f).concat(S.customFoods || []); }
+const foodById = id => allFoods().find(f => f.id === id) || null;
+function matchFood(name){
+  const it = ntoks(name); let best = null;
+  for (const f of allFoods()) for (const cand of [f.n].concat(f.a || [])) {
+    const ft = ntoks(cand); if (!ft.length || !ft.every(w => it.includes(w))) continue;
+    const score = ft.length * 10 + (f.custom ? 5 : 0);
+    if (!best || score > best.score) best = { score, f };
+  }
+  return best ? best.f : null;
+}
+const roundG = a => a >= 100 ? Math.round(a / 5) * 5 : a >= 20 ? Math.round(a) : Math.round(a * 2) / 2;
+const num1 = x => String(Math.round(x * 10) / 10).replace(".", ",");
+const unitOf = f => /leite (desnatado|integral)|suco/i.test(f.n) ? "ml" : "g";
+function unitHint(f, grams){ if (!f.u || !grams) return ""; const n = Math.round(grams / f.u[0] * 2) / 2; if (n < 0.5) return ""; return "≈ " + num1(n) + " " + (n > 1 ? (UNIT_PL[f.u[1]] || f.u[1] + "s") : f.u[1]); }
+const groupBasis = g => (FD().groups[g] || {}).basis || "k";
+const groupLabel = g => (FD().groups[g] || {}).label || (g === "seu" ? "Seus alimentos" : g);
+function convertTo(src, grams, dst, basis){
+  const need = src[basis] * grams / 100; const per = dst[basis]; const min = basis === "k" ? 10 : 1;
+  if (!per || per < min || need <= 0) return null;
+  const g = need / per * 100; if (g > 1500) return null;
+  const r = roundG(g); const kcal = Math.round(r * dst.k / 100);
+  return { g: r, kcal, d: kcal - Math.round(grams * src.k / 100) };
+}
+const portion = (f, g) => ({ k: Math.round(f.k * g / 100), p: Math.round(f.p * g / 10) / 10, c: Math.round(f.c * g / 10) / 10, l: Math.round(f.l * g / 10) / 10 });
+const macroLine = (f, g) => { const x = portion(f, g); return `${x.k} kcal · P ${num1(x.p)} g · C ${num1(x.c)} g · G ${num1(x.l)} g`; };
+const srcTag = f => f.custom ? '<span class="pill accent">seu</span>' : f.src === "rotulo" ? `<span class="pill">rótulo${f.edited ? ", ajustado" : ""}</span>` : (f.edited ? '<span class="pill">ajustado</span>' : "");
+
+/* trocas: padrão daqui em diante (S.diet.swaps) ou só no dia (dietDays[d].swaps) */
+const swapKey = (k, o, name) => k + "|" + o + "|" + norm(name);
+function permanentFor(sk, date){ const list = ((S.diet && S.diet.swaps) || {})[sk] || []; let e = null; for (const x of list) if (x.since <= date && (!e || x.since >= e.since)) e = x; return e && !e.revert ? e : null; }
+function setPermanent(sk, date, entry){ S.diet.swaps = S.diet.swaps || {}; const list = (S.diet.swaps[sk] || []).filter(e => e.since < date); list.push(Object.assign({ since: date }, entry)); S.diet.swaps[sk] = list; }
+function effectiveSwap(date, k, o, i){
+  const it = mealBy(k).options[o].items[i]; const sk = swapKey(k, o, it.name); const day = dayRO(date).swaps || {};
+  const d1 = day[sk] || day[itemKey(k, o, i)];
+  if (d1) return d1.revert ? null : Object.assign({ scope: "dia" }, d1);
+  const p = permanentFor(sk, date); return p ? Object.assign({ scope: "padrao" }, p) : null;
+}
+
+function equivRows(src, grams, basis, mode){
+  const defGroups = src.g === "fruta" && basis === "c" ? ["fruta", "carb"] : src.g === "carb" && basis === "c" ? ["carb", "fruta"] : [src.g === "seu" ? null : src.g];
+  const rows = allFoods().filter(f => f.id !== src.id).map(f => ({ f, r: convertTo(src, grams, f, basis) })).filter(x => x.r);
+  rows.sort((a, b) => { const ia = defGroups.indexOf(a.f.g), ib = defGroups.indexOf(b.f.g); return (ia < 0 ? 9 : ia) - (ib < 0 ? 9 : ib); });
+  return rows.map(({ f, r }) => {
+    const def = defGroups.includes(f.g) || (f.custom && groupBasis(f.g) === basis);
+    const tag = mode === "swap" ? "button" : "div";
+    const delta = r.d === 0 ? "mesmas calorias" : (r.d > 0 ? "+" : "−") + Math.abs(r.d) + " kcal";
+    return `<${tag} class="eqrow${mode === "swap" ? "" : " static"}" ${mode === "swap" ? `data-act="swap-apply" data-id="${esc(f.id)}" data-g="${r.g}"` : ""} data-def="${def ? 1 : 0}" data-search="${esc(norm(f.n + " " + (f.a || []).join(" ")))}" ${def ? "" : "hidden"}>
+      <span class="grow"><span class="eqn">${esc(f.n)} ${srcTag(f)}</span><small class="${r.d > 0 ? "up-k" : r.d < 0 ? "down-k" : "muted"}">${esc(delta)}${def ? "" : " · " + esc(groupLabel(f.g).toLowerCase())}</small></span>
+      <span class="num eqv">${esc(fmtAmt(r.g, unitOf(f)))}${unitHint(f, r.g) ? `<small>${esc(unitHint(f, r.g))}</small>` : ""}</span></${tag}>`;
+  }).join("");
+}
+function basisChips(cur, def){ return `<div class="seg basis" role="group" aria-label="Igualar por">${["p", "c", "l", "k"].map(b => `<button data-act="basis" data-b="${b}" aria-pressed="${b === cur}">${({ p: "Proteína", c: "Carbo", l: "Gordura", k: "Calorias" })[b]}</button>`).join("")}</div>`; }
+function equivSection(src, grams, basis, mode){
+  const def = groupBasis(src.g);
+  const need = basis === "k" ? Math.round(src.k * grams / 100) + " kcal" : num1(src[basis] * grams / 100) + " g de " + BASIS_LABEL[basis];
+  return `<section class="card stack"><div class="spread"><h3>${mode === "swap" ? "Trocar por" : "Equivale a"}</h3></div>
+    <div class="stack" style="gap:6px"><span class="label">Igualar por</span>${basisChips(basis, def)}</div>
+    <p class="small muted">Mesma quantidade de ${esc(BASIS_LABEL[basis])}: <b class="num">${esc(need)}</b>.${basis !== def ? ` O padrão para ${esc(groupLabel(src.g).toLowerCase())} é ${esc(BASIS_LABEL[def])}.` : ""} Ao lado de cada alimento, a diferença de calorias.</p>
+    <input class="input" id="swapq" type="search" placeholder="Buscar qualquer alimento" autocomplete="off" aria-label="Buscar alimento">
+    <div class="eqlist">${equivRows(src, grams, basis, mode)}</div>
+    <p class="small muted">Não achou? <button class="btn sm ghost" data-act="food-new" data-name="">Cadastrar alimento</button></p></section>`;
+}
+
 function viewSwap(){
   const sw = UI.swap; const date = dietDate(); const m = mealBy(sw.k); if (!m) { UI.view = null; return viewDieta(); }
-  const it = m.options[sw.o].items[sw.i]; const cur = dayRO(date).swaps[itemKey(sw.k, sw.o, sw.i)];
-  const conv = D().conv; const eq = conv ? SVDiet.equivalents(conv, it.name, it.amount, it.unit) : null;
-  const subs = (it.subs || []).map(s => `<button class="eqrow" data-act="swap-apply" data-name="${esc(s.name)}" data-qty="${esc(s.qty)}" data-from="nutri"><span class="grow"><b>${esc(s.name)}</b></span><span class="num eqv">${esc(qtyLabel(s))}${s.house && s.amount != null ? `<small>${esc(fmtAmt(s.amount, s.unit))}</small>` : ""}</span></button>`).join("");
-  let table = "";
-  if (!conv) table = `<section class="card stack"><h3>Tabela de conversões</h3><p class="muted small">Importe o PDF da tabela para ver todas as trocas com a quantidade calculada.</p><button class="btn" data-act="diet-import">Importar tabela (PDF)</button></section>`;
-  else if (!eq) table = `<section class="card stack"><h3>Tabela de conversões</h3><p class="muted small">“${esc(it.name)}” não está na tabela da nutri. Use as substituições acima ou pergunte a ela.</p></section>`;
-  else {
-    const calc = eq.refEq != null;
-    const rows = eq.rows.filter(r => !r.isSelf).map(r => {
-      const val = calc ? (r.calc.text ? "≈ " + r.calc.text.toLowerCase() : fmtAmt(r.calc.a, r.calc.u)) : "";
-      const qty = calc ? (r.calc.text ? r.calc.text.toLowerCase() : `${String(r.calc.a).replace(".", ",")}${r.calc.u === "unid" ? " unid." : r.calc.u}`) : "";
-      return calc
-        ? `<button class="eqrow" data-act="swap-apply" data-name="${esc(r.name)}" data-qty="${esc(qty)}" data-from="tabela" data-search="${esc(norm(r.name))}"><span class="grow">${esc(r.name)}${r.isRef ? ' <span class="pill">referência</span>' : ""}</span><span class="num eqv">${esc(val)}</span></button>`
-        : `<div class="eqrow static" data-search="${esc(norm(r.name))}"><span class="grow">${esc(r.name)}</span><span class="num eqv small">${r.vals.map(v => esc(v.toLowerCase())).join(" · ")}</span></div>`;
-    }).join("");
-    const note = eq.partial ? `<p class="hint warn-b">“${esc(it.name)}” não aparece igual na tabela. O mais parecido é ${esc(eq.match)}, então a quantidade não é calculada. Confira com a nutri antes de trocar.</p>`
-      : !calc ? `<p class="hint warn-b">A tabela mede ${esc(eq.match.toLowerCase())} em unidades, então não dá para calcular a partir de ${esc(qtyLabel(it))}. Colunas: ${eq.refCols.map(v => esc(v.toLowerCase())).join(" · ")} de ${esc(eq.refName.toLowerCase())}.</p>`
-      : `<p class="small muted">${esc(qtyLabel(it))}${it.house && it.amount != null ? " (" + esc(fmtAmt(it.amount, it.unit)) + ")" : ""} de ${esc(it.name.toLowerCase())} equivalem a <b class="num">${esc(fmtAmt(Math.round(eq.refEq * 10) / 10, eq.refUnit))}</b> de ${esc(eq.refName.toLowerCase())}, a referência do grupo. Toque num alimento para trocar.</p>`;
-    table = `<section class="card stack"><div class="spread"><h3>Tabela de conversões · ${esc(eq.cat)}</h3></div>${note}
-      <input class="input" id="swapq" type="search" placeholder="Buscar alimento" autocomplete="off" aria-label="Buscar alimento na tabela">
-      <div class="eqlist">${rows}</div></section>`;
-  }
-  return `<div class="top"><div class="row" style="flex-wrap:nowrap;min-width:0"><button class="icon-btn" data-act="swap-close" aria-label="Voltar">${ICONS.back}</button><div style="min-width:0"><span class="label eyebrow">Trocar · ${esc(prettyMeal(m.name))}</span><h1>${esc(it.name)}</h1></div></div></div>
+  const orig = m.options[sw.o].items[sw.i]; const cur = effectiveSwap(date, sw.k, sw.o, sw.i);
+  const src = matchFood(orig.name); const grams = orig.amount;
+  const basis = sw.basis || (src ? groupBasis(src.g) : "k");
+  const subs = (orig.subs || []).map(s => `<button class="eqrow" data-act="swap-apply-raw" data-name="${esc(s.name)}" data-qty="${esc(s.qty)}"><span class="grow"><span class="eqn">${esc(s.name)}</span></span><span class="num eqv">${esc(qtyLabel(s))}${s.house && s.amount != null ? `<small>${esc(fmtAmt(s.amount, s.unit))}</small>` : ""}</span></button>`).join("");
+  const srcCard = src && grams != null
+    ? `<div class="stack" style="gap:2px"><span class="small">Calculado como <b>${esc(src.n)}</b> ${srcTag(src)}</span><span class="small muted num">${esc(macroLine(src, grams))}</span></div>
+       <button class="btn sm ghost" data-act="food-edit" data-id="${esc(src.id)}" style="align-self:flex-start">${src.custom ? "Editar valores" : "Ajustar valores pela embalagem"}</button>`
+    : `<p class="hint warn-b">${src ? "A porção do plano não está em gramas, então não dá para calcular." : `Não encontrei “${esc(orig.name)}” na tabela do app. Cadastre os valores da embalagem uma vez e o app passa a converter.`}</p>
+       ${src ? "" : `<button class="btn sm" data-act="food-new" data-name="${esc(orig.name)}">Cadastrar este alimento</button>`}`;
+  const curCard = cur ? `<div class="swapnow"><div><span class="label">${cur.scope === "dia" ? "Trocado só hoje" : "Troca em uso"}</span><p><b>${esc(cur.name)}</b> · <span class="num">${esc(qtyLabel(cur))}</span>${cur.house && cur.amount != null ? ` <span class="small muted num">${esc(fmtAmt(cur.amount, cur.unit))}</span>` : ""}</p>${cur.scope === "padrao" ? `<p class="small muted">Vale desde ${esc(fmtDate(cur.since))}, em todos os dias seguintes.</p>` : ""}</div><button class="btn sm" data-act="swap-reset">Voltar ao do plano</button></div>` : "";
+  const nutri = D().conv ? (() => { const eq = SVDiet.equivalents(D().conv, orig.name, orig.amount, orig.unit); if (!eq) return ""; const rows = eq.rows.filter(r => !r.isSelf).map(r => `<div class="eqrow static" data-def="1" data-search="${esc(norm(r.name))}"><span class="grow">${esc(r.name)}</span><span class="num eqv small">${r.calc ? esc(r.calc.text ? r.calc.text.toLowerCase() : fmtAmt(r.calc.a, r.calc.u)) : r.vals.map(v => esc(v.toLowerCase())).join(" · ")}</span></div>`).join(""); return `<section class="card flat"><details><summary>Tabela da nutri · ${esc(eq.cat)}</summary><div class="eqlist">${rows}</div></details></section>`; })() : "";
+  return `<div class="top"><div class="row" style="flex-wrap:nowrap;min-width:0"><button class="icon-btn" data-act="swap-close" aria-label="Voltar">${ICONS.back}</button><div style="min-width:0"><span class="label eyebrow">Trocar · ${esc(prettyMeal(m.name))}</span><h1>${esc(orig.name)}</h1></div></div></div>
   <main>
-    <section class="card stack"><div class="spread"><span class="label">Porção do plano</span><span class="num"><b>${esc(qtyLabel(it))}</b>${it.house && it.amount != null ? ` <span class="muted small">${esc(fmtAmt(it.amount, it.unit))}</span>` : ""}</span></div>
-      ${cur ? `<div class="spread"><span class="small">Hoje você trocou por <b>${esc(cur.name)}</b> · ${esc(qtyLabel(cur))}</span><button class="btn sm" data-act="swap-reset">Desfazer</button></div>` : ""}
-    </section>
-    ${subs ? `<section class="card stack"><h3>Substituições indicadas pela nutri</h3><div class="eqlist">${subs}</div></section>` : ""}
-    ${table}
+    <section class="card stack"><div class="spread"><span class="label">Porção do plano</span><span class="num"><b>${esc(qtyLabel(orig))}</b>${orig.house && orig.amount != null ? ` <span class="muted small">${esc(fmtAmt(orig.amount, orig.unit))}</span>` : ""}</span></div>
+      ${srcCard}${curCard}</section>
+    <label class="scope" for="sw-today"><input type="checkbox" id="sw-today" data-sw="today" ${sw.onlyToday ? "checked" : ""}><span><b>Trocar só hoje</b><small>Sem marcar, a troca vira o padrão: vale hoje e nos próximos dias, até você voltar ao do plano.</small></span></label>
+    ${subs ? `<section class="card stack"><h3>Indicadas pela nutri</h3><div class="eqlist">${subs}</div></section>` : ""}
+    ${src && grams != null ? equivSection(src, grams, basis, "swap") : ""}
+    ${nutri}
   </main>`;
+}
+
+function viewConv(){
+  const st = UI.convState || (UI.convState = { id: "t3", g: 100, basis: null });
+  const src = foodById(st.id) || allFoods()[0]; const basis = st.basis || groupBasis(src.g);
+  const groups = {}; allFoods().forEach(f => { (groups[f.g] = groups[f.g] || []).push(f); });
+  const opts = Object.keys(groups).map(g => `<optgroup label="${esc(groupLabel(g))}">${groups[g].map(f => `<option value="${esc(f.id)}" ${f.id === src.id ? "selected" : ""}>${esc(f.n)}</option>`).join("")}</optgroup>`).join("");
+  return `<div class="top"><div class="row" style="flex-wrap:nowrap;min-width:0"><button class="icon-btn" data-act="conv-close" aria-label="Voltar">${ICONS.back}</button><div style="min-width:0"><span class="label eyebrow">Dieta</span><h1>Conversor</h1></div></div></div>
+  <main>
+    <section class="card stack">
+      <label class="f" for="convFood">Alimento<select id="convFood" data-conv="id">${opts}</select></label>
+      <label class="f" for="convG">Quantidade (g)<input class="input num" id="convG" data-conv="g" inputmode="decimal" value="${esc(String(st.g).replace(".", ","))}"></label>
+      <p class="small num">${esc(macroLine(src, st.g))}</p>
+      <div class="row small"><span class="muted">${src.custom ? "Cadastrado por você" : src.src === "rotulo" ? "Média de rótulos" : "TACO: " + esc(src.taco || "")}</span><button class="btn sm ghost" data-act="food-edit" data-id="${esc(src.id)}">${src.custom ? "Editar" : "Ajustar valores"}</button></div>
+    </section>
+    ${st.g > 0 ? equivSection(src, st.g, basis, "free") : ""}
+    <p class="small muted">Tabela do app: TACO, 4ª edição (NEPA/Unicamp), valores por 100 g. Alimentos marcados como rótulo usam a média de embalagens comuns; ajuste pela sua.</p>
+  </main>`;
+}
+
+function viewFoodEdit(){
+  const fe = UI.foodEdit; const f = fe.id ? foodById(fe.id) : null;
+  const base = f && !f.custom ? FD().foods.find(x => x.id === f.id) : null;
+  const v = f || { n: fe.name || "", g: "carb", k: "", p: "", c: "", l: "" };
+  const val = x => x === "" || x == null ? "" : String(x).replace(".", ",");
+  return `<div class="top"><div class="row" style="flex-wrap:nowrap;min-width:0"><button class="icon-btn" data-act="food-cancel" aria-label="Voltar">${ICONS.back}</button><div style="min-width:0"><span class="label eyebrow">${f ? (f.custom ? "Seu alimento" : "Ajustar valores") : "Novo alimento"}</span><h1>${esc(v.n || "Cadastrar alimento")}</h1></div></div></div>
+  <main><form class="card stack" id="foodForm" novalidate>
+    <p class="small muted">Use a tabela nutricional da embalagem. Informe os valores <b>por 100 g</b> (ou 100 ml). Se a embalagem mostra por porção, divida pelo peso da porção e multiplique por 100.</p>
+    <label class="f" for="ff-n">Nome<input class="input" id="ff-n" name="n" value="${esc(v.n)}" ${f && !f.custom ? "readonly" : ""} required></label>
+    ${f && !f.custom ? "" : `<label class="f" for="ff-g">Grupo<select id="ff-g" name="g">${Object.keys(FD().groups).map(g => `<option value="${g}" ${v.g === g ? "selected" : ""}>${esc(groupLabel(g))} (iguala por ${esc(BASIS_LABEL[groupBasis(g)])})</option>`).join("")}</select></label>`}
+    <div class="grid2">
+      <label class="f" for="ff-k">Calorias (kcal)<input class="input num" id="ff-k" name="k" inputmode="decimal" value="${esc(val(v.k))}"></label>
+      <label class="f" for="ff-p">Proteína (g)<input class="input num" id="ff-p" name="p" inputmode="decimal" value="${esc(val(v.p))}"></label>
+      <label class="f" for="ff-c">Carboidrato (g)<input class="input num" id="ff-c" name="c" inputmode="decimal" value="${esc(val(v.c))}"></label>
+      <label class="f" for="ff-l">Gordura (g)<input class="input num" id="ff-l" name="l" inputmode="decimal" value="${esc(val(v.l))}"></label>
+    </div>
+    ${f && !f.custom ? "" : `<div class="grid2"><label class="f" for="ff-ug">Peso de 1 unidade (opcional, g)<input class="input num" id="ff-ug" name="ug" inputmode="decimal" value="${esc(v.u ? val(v.u[0]) : "")}"></label><label class="f" for="ff-un">Nome da unidade<input class="input" id="ff-un" name="un" placeholder="fatia, unidade…" value="${esc(v.u ? v.u[1] : "")}"></label></div>`}
+    ${UI.foodErr ? `<p class="hint warn-b">${esc(UI.foodErr)}</p>` : ""}
+    <button class="btn primary block" type="submit">Salvar</button>
+    ${f && !f.custom && f.edited ? `<button class="btn ghost block" type="button" data-act="food-restore" data-id="${esc(f.id)}">Voltar aos valores ${base && base.src === "TACO" ? "da TACO" : "de rótulo"} (${esc(macroLine(base, 100))})</button>` : ""}
+    ${f && f.custom ? `<button class="btn ghost danger block" type="button" data-act="food-del" data-id="${esc(f.id)}">Apagar este alimento</button>` : ""}
+  </form></main>`;
+}
+function saveFoodForm(form){
+  const fd = new FormData(form); const n = k => numParse(fd.get(k));
+  const k = n("k"), p = n("p") ?? 0, c = n("c") ?? 0, l = n("l") ?? 0;
+  if (!(k > 0)) { UI.foodErr = "Informe as calorias por 100 g (um número maior que zero)."; render(); return; }
+  if (p + c + l > 100.5) { UI.foodErr = "Proteína, carboidrato e gordura somam mais de 100 g. Confira se os valores são por 100 g."; render(); return; }
+  const fe = UI.foodEdit; const f = fe.id ? foodById(fe.id) : null;
+  if (f && !f.custom) { S.foodEdits = S.foodEdits || {}; S.foodEdits[f.id] = { k, p, c, l }; }
+  else {
+    const name = String(fd.get("n") || "").trim(); if (!name) { UI.foodErr = "Dê um nome ao alimento."; render(); return; }
+    const ug = n("ug"); const un = String(fd.get("un") || "").trim();
+    const row = { n: name, g: String(fd.get("g") || "carb"), k, p, c, l, src: "seu", custom: true, a: [name].concat(fe.alias ? [fe.alias] : []) };
+    if (ug > 0) row.u = [ug, un || "unidade"];
+    S.customFoods = S.customFoods || [];
+    if (f) Object.assign(S.customFoods.find(x => x.id === f.id), row); else S.customFoods.push(Object.assign({ id: "c" + uid() }, row));
+  }
+  UI.foodErr = null; persist(); UI.view = UI.foodReturn || null; render(); toast("Alimento salvo");
 }
 function viewTodayMeal(){
   if (!DP()) return "";
@@ -1308,6 +1445,13 @@ function viewTodayMeal(){
       <button class="btn sm" data-act="tab" data-tab="dieta">Ver</button></div></div>`;
 }
 
+function commitSwap(date, entry){
+  const { k, o, i, onlyToday } = UI.swap; const it = mealBy(k).options[o].items[i]; const sk = swapKey(k, o, it.name); const d = dayRW(date);
+  delete d.swaps[itemKey(k, o, i)];
+  if (onlyToday) d.swaps[sk] = entry; else { delete d.swaps[sk]; setPermanent(sk, date, entry); }
+  persist(); UI.view = null; render(); window.scrollTo(0, UI.swapReturnY || 0);
+  toast(onlyToday ? "Trocado só hoje" : "Trocado: vale a partir de hoje");
+}
 function dietAct(act, b){
   const date = dietDate();
   switch (act) {
@@ -1322,10 +1466,22 @@ function dietAct(act, b){
       const pr = mealProgress(date, k); if (pr.n === pr.total) { if (!d.done[k]) d.done[k] = Date.now(); } else delete d.done[k];
       persist(); UI.keepScroll = true; render(); return true; }
     case "meal-opt": { const d = dayRW(date); d.opt[b.dataset.k] = +b.dataset.o; persist(); UI.keepScroll = true; render(); return true; }
-    case "swap-open": UI.swap = { k: b.dataset.k, o: +b.dataset.o, i: +b.dataset.i }; UI.swapReturnY = window.scrollY; UI.view = "swap"; render(); window.scrollTo(0, 0); return true;
+    case "swap-open": UI.swap = { k: b.dataset.k, o: +b.dataset.o, i: +b.dataset.i, basis: null, onlyToday: false }; UI.swapReturnY = window.scrollY; UI.view = "swap"; render(); window.scrollTo(0, 0); return true;
     case "swap-close": UI.view = null; render(); window.scrollTo(0, UI.swapReturnY || 0); return true;
-    case "swap-apply": { const d = dayRW(date); const q = SVDiet.parseQty(b.dataset.qty); d.swaps[itemKey(UI.swap.k, UI.swap.o, UI.swap.i)] = Object.assign({ name: b.dataset.name, qty: b.dataset.qty, from: b.dataset.from }, q); persist(); UI.view = null; render(); window.scrollTo(0, UI.swapReturnY || 0); toast("Trocado por " + b.dataset.name); return true; }
-    case "swap-reset": { const d = dayRW(date); delete d.swaps[itemKey(UI.swap.k, UI.swap.o, UI.swap.i)]; persist(); UI.keepScroll = true; render(); return true; }
+    case "basis": if (UI.view === "conv") UI.convState.basis = b.dataset.b; else UI.swap.basis = b.dataset.b; UI.keepScroll = true; render(); return true;
+    case "swap-apply": { const f = foodById(b.dataset.id); const g = +b.dataset.g; const u = unitOf(f); commitSwap(date, { name: f.n, qty: fmtAmt(g, u), amount: g, unit: u, house: unitHint(f, g), foodId: f.id, from: "tabela" }); return true; }
+    case "swap-apply-raw": { const q = SVDiet.parseQty(b.dataset.qty); commitSwap(date, Object.assign({ name: b.dataset.name, qty: b.dataset.qty, from: "nutri" }, q)); return true; }
+    case "swap-reset": { const { k, o, i } = UI.swap; const it = mealBy(k).options[o].items[i]; const sk = swapKey(k, o, it.name); const d = dayRW(date);
+      if (d.swaps[sk] || d.swaps[itemKey(k, o, i)]) { delete d.swaps[sk]; delete d.swaps[itemKey(k, o, i)]; }
+      if (permanentFor(sk, date)) setPermanent(sk, date, { revert: true });
+      persist(); UI.keepScroll = true; render(); toast("De volta ao alimento do plano"); return true; }
+    case "conv-open": UI.view = "conv"; UI.convReturnY = window.scrollY; render(); window.scrollTo(0, 0); return true;
+    case "conv-close": UI.view = null; render(); window.scrollTo(0, UI.convReturnY || 0); return true;
+    case "food-new": UI.foodReturn = UI.view; UI.foodEdit = { id: null, name: b.dataset.name || "", alias: b.dataset.name ? norm(b.dataset.name) : "" }; UI.foodErr = null; UI.view = "food"; render(); window.scrollTo(0, 0); return true;
+    case "food-edit": UI.foodReturn = UI.view; UI.foodEdit = { id: b.dataset.id }; UI.foodErr = null; UI.view = "food"; render(); window.scrollTo(0, 0); return true;
+    case "food-cancel": UI.view = UI.foodReturn || null; UI.foodErr = null; render(); return true;
+    case "food-restore": if (S.foodEdits) delete S.foodEdits[b.dataset.id]; persist(); UI.view = UI.foodReturn || null; render(); toast("Valores originais de volta"); return true;
+    case "food-del": S.customFoods = (S.customFoods || []).filter(x => x.id !== b.dataset.id); persist(); UI.view = UI.foodReturn || null; render(); return true;
     case "water": { const d = dayRW(date); d.water = Math.max(0, (d.water || 0) + (+b.dataset.ml)); persist(); UI.keepScroll = true; render(); return true; }
     case "diet-reorder": UI.dietReorder = !UI.dietReorder; render(); return true;
     case "meal-move": { const d = dayRW(date); const ord = mealOrder(date); const i = ord.indexOf(b.dataset.k), j = i + (+b.dataset.d); if (j < 0 || j >= ord.length) return true; [ord[i], ord[j]] = [ord[j], ord[i]]; d.order = ord; persist(); UI.keepScroll = true; render(); return true; }
@@ -1400,7 +1556,7 @@ document.addEventListener("click", async ev => {
 });
 document.addEventListener("input", ev => {
   const el = ev.target;
-  if (el.id === "swapq") { const q = norm(el.value); document.querySelectorAll(".eqlist [data-search]").forEach(r => { r.hidden = !!q && !r.dataset.search.includes(q); }); return; }
+  if (el.id === "swapq") { const q = norm(el.value); document.querySelectorAll(".eqlist [data-search]").forEach(r => { r.hidden = q ? !r.dataset.search.includes(q) : r.dataset.def !== "1"; }); return; }
   if (el.dataset.ex && el.dataset.k && S.draft) {
     const en = S.draft.entries[el.dataset.ex] || (S.draft.entries[el.dataset.ex] = { sets: [] });
     const i = +el.dataset.set; while (en.sets.length <= i) en.sets.push({});
@@ -1424,8 +1580,12 @@ document.addEventListener("change", ev => {
   if (el.dataset.plan === "newCycle") { UI.importNewCycle = el.checked; return; }
   if (el.id === "file" && el.files[0]) handleFile(el.files[0]);
   if (el.id === "dietFile" && el.files.length) handleDietFiles([...el.files]);
+  if (el.dataset.sw === "today" && UI.swap) { UI.swap.onlyToday = el.checked; return; }
+  if (el.dataset.conv === "id") { UI.convState.id = el.value; UI.convState.basis = null; UI.keepScroll = true; render(); return; }
+  if (el.dataset.conv === "g") { const g = numParse(el.value); if (g > 0) { UI.convState.g = g; UI.keepScroll = true; render(); const n = document.getElementById("convG"); if (n) n.blur(); } return; }
   if (el.id === "backupFile" && el.files[0]) restoreBackup(el.files[0]);
 });
+document.addEventListener("submit", ev => { if (ev.target.id === "foodForm") { ev.preventDefault(); saveFoodForm(ev.target); } });
 document.addEventListener("keydown", ev => { // Enter jumps to next set field
   const el = ev.target; if (ev.key !== "Enter" || !el.dataset || !el.dataset.ex) return;
   ev.preventDefault(); const all = [...document.querySelectorAll("input[data-ex]")]; const n = all[all.indexOf(el) + 1]; if (n) n.focus(); else el.blur();
